@@ -16,3 +16,34 @@ export async function saveOutput(content: string, userId: string) {
     throw error;
   }
 }
+
+export async function getOutputs(userId: string) {
+  try {
+    const outputs = await prisma.output.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return outputs;
+  } catch (error) {
+    console.error("Error fetching outputs:", error);
+    throw error;
+  }
+}
+
+export async function getOutputById(id: string) {
+  try {
+    const output = await prisma.output.findUnique({
+      where: {
+        id,
+      },
+    });
+    return output;
+  } catch (error) {
+    console.error("Error fetching output:", error);
+    throw error;
+  }
+}
