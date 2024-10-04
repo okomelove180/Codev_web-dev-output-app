@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import AudioRecorder from "@/components/AudioRecorder";
+import { saveOutput } from "@/lib/db";
 
 const NewOutputPage: React.FC = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
     setIsTranscribing(true);
@@ -24,6 +29,15 @@ const NewOutputPage: React.FC = () => {
 
       const data = await response.json();
       setTranscription(data.text);
+
+      // Save the transcription to the database
+      if (session?.user?.id) {
+        await saveOutput(data.text, session.user.id);
+        router.push("/outputs");
+      } else {
+        console.error("User not authenticated");
+        // Handle unauthenticated user (e.g., redirect to login page)
+      }
     } catch (error) {
       console.error("Error during transcription:", error);
       // エラーハンドリングをここに追加（例：ユーザーへの通知）
