@@ -1,22 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AudioRecorder from "@/components/AudioRecorder";
-import { saveOutput } from "@/lib/db";
 
 const NewOutputPage: React.FC = () => {
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [transcription, setTranscription] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!session?.user) {
-      router.push("/login");
-    }
-  }, [session, router]);
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
     if (!session?.user) {
@@ -25,42 +17,65 @@ const NewOutputPage: React.FC = () => {
       return;
     }
 
-    setIsTranscribing(true);
+    setIsProcessing(true);
     try {
       const formData = new FormData();
       formData.append("audio", audioBlob, "recording.webm");
 
-      const response = await fetch("/api/transcribe", {
+      // 音声認識
+      const transcribeResponse = await fetch("/api/transcribe", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
+      if (!transcribeResponse.ok) {
         throw new Error("Transcription failed");
       }
 
-      const data = await response.json();
-      setTranscription(data.text);
+      const { text: transcription } = await transcribeResponse.json();
 
-      // Save the transcription using the new API route
+      // GPTによる分析と修正
+      const analyzeResponse = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: transcription }),
+      });
+
+      if (!analyzeResponse.ok) {
+        throw new Error("Analysis failed");
+      }
+
+      const analysisResult = await analyzeResponse.json();
+
+      // 結果をデータベースに保存
       const saveResponse = await fetch("/api/outputs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content: data.text }),
+        body: JSON.stringify({
+          originalContent: transcription,
+          correctedContent: analysisResult.correctedText,
+          analysis: analysisResult.analysis,
+          officialDocs: analysisResult.officialDocs,
+        }),
       });
 
       if (!saveResponse.ok) {
         throw new Error("Failed to save output");
       }
 
-      router.push("/outputs");
+      const { id } = await saveResponse.json();
+
+      // アウトプット詳細ページにリダイレクト
+      router.push(`/outputs/${id}`);
     } catch (error) {
-      console.error("Error during transcription or saving:", error);
+      console.error("Error during processing:", error);
       // エラーハンドリングをここに追加（例：ユーザーへの通知）
     } finally {
-      setIsTranscribing(false);
+      setIsProcessing(false);
     }
   };
 
@@ -68,13 +83,7 @@ const NewOutputPage: React.FC = () => {
     <div>
       <h1>新規アウトプット</h1>
       <AudioRecorder onRecordingComplete={handleRecordingComplete} />
-      {isTranscribing && <p>文字起こし中...</p>}
-      {transcription && (
-        <div>
-          <h2>文字起こし結果:</h2>
-          <p>{transcription}</p>
-        </div>
-      )}
+      {isProcessing && <p>処理中...</p>}
     </div>
   );
 };
