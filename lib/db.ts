@@ -2,11 +2,20 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function saveOutput(content: string, userId: string) {
+export async function saveOutput(
+  originalContent: string,
+  correctedContent: string,
+  analysis: string,
+  officialDocs: string[],
+  userId: string
+) {
   try {
     const output = await prisma.output.create({
       data: {
-        content,
+        originalContent,
+        correctedContent,
+        analysis,
+        officialDocs,
         userId,
       },
     });

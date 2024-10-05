@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { saveOutput } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -13,14 +11,16 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { content } = await request.json();
+    const { originalContent, correctedContent, analysis, officialDocs } =
+      await request.json();
 
-    const output = await prisma.output.create({
-      data: {
-        content,
-        userId: session.user.id,
-      },
-    });
+    const output = await saveOutput(
+      originalContent,
+      correctedContent,
+      analysis,
+      officialDocs,
+      session.user.id
+    );
 
     return NextResponse.json(output);
   } catch (error) {
