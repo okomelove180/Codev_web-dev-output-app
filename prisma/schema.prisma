@@ -22,9 +22,18 @@ model Output {
   originalContent  String
   correctedContent String
   analysis         String
-  officialDocs     String[]
-  userId           String
+  officialDocs     OfficialDoc[]
   user             User     @relation(fields: [userId], references: [id])
+  userId           String
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model OfficialDoc {
+  id        String  @id @default(cuid())
+  siteName  String
+  url       String
+  summary   String
+  output    Output  @relation(fields: [outputId], references: [id])
+  outputId  String
 }

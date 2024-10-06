@@ -31,11 +31,13 @@ export default async function OutputPage({ params }: OutputPageProps) {
 
       <h2>関連する公式ドキュメント</h2>
       <ul>
-        {output.officialDocs.map((doc, index) => (
-          <li key={index}>
-            <a href={doc} target="_blank" rel="noopener noreferrer">
-              {doc}
+        {output.officialDocs.map((doc) => (
+          <li key={doc.id}>
+            <h3>{doc.siteName}</h3>
+            <a href={doc.url} target="_blank" rel="noopener noreferrer">
+              {doc.url}
             </a>
+            <p>{doc.summary}</p>
           </li>
         ))}
       </ul>
