@@ -6,10 +6,16 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const OfficialDoc = z.object({
+  siteName: z.string(),
+  url: z.string(),
+  summary: z.string(),
+});
+
 const AnalysisResult = z.object({
   correctedText: z.string(),
   analysis: z.string(),
-  officialDocs: z.array(z.string()),
+  officialDocs: z.array(OfficialDoc),
 });
 
 export async function analyzeAndCorrectWithGPT(content: string) {
@@ -24,12 +30,12 @@ export async function analyzeAndCorrectWithGPT(content: string) {
         },
         {
           role: "user",
-          content: `以下のWeb開発に関連するテキストを分析してください。：\n\n${content}\n\n
+          content: `以下のWeb開発に関連するテキストを分析してください。: \n\n${content}\n\n
           
           変数の中に格納するものは下記のとおりです\n
           - correctedText: 音声認識の誤認識を修正し、正しい文章にしたもの\n
           - analysis: correctedTextの内容を認識して、アウトプットのキーポイントや技術用語の説明をしたもの\n
-          - officialDocs: アウトプットに関連する技術やコンセプトに関する公式ドキュメントへのリンクを最大3つまで提供してください。\n
+          - officialDocs: アウトプットに関連する技術やコンセプトに関する公式ドキュメントへのリンクを最大3つまで提供してください。siteName: サイト名, url:サイトのURL, summary:サイトを見れば何がわかるかを50文字以内で記述。\n
           `,
         },
       ],
