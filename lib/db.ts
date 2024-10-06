@@ -10,6 +10,13 @@ export async function saveOutput(
   userId: string
 ) {
   try {
+    console.log("Saving output with data:", {
+      originalContent,
+      correctedContent,
+      analysis,
+      officialDocs,
+      userId,
+    });
     const output = await prisma.output.create({
       data: {
         originalContent,
@@ -19,6 +26,7 @@ export async function saveOutput(
         userId,
       },
     });
+    console.log("Output saved successfully:", output);
     return output;
   } catch (error) {
     console.error("Error saving output:", error);

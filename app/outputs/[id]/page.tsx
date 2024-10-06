@@ -1,6 +1,6 @@
 import React from "react";
 import { getOutputById } from "@/lib/db";
-import { getRelatedQiitaArticles } from "@/lib/qiita";
+// import { getRelatedQiitaArticles } from "@/lib/qiita";
 import { notFound } from "next/navigation";
 
 interface OutputPageProps {
@@ -14,9 +14,7 @@ export default async function OutputPage({ params }: OutputPageProps) {
     notFound();
   }
 
-  const qiitaArticles = await getRelatedQiitaArticles(
-    output.correctedContent.substring(0, 100)
-  );
+  // const qiitaArticles = await getRelatedQiitaArticles(output.correctedContent.substring(0, 100));
 
   return (
     <div>
@@ -42,21 +40,15 @@ export default async function OutputPage({ params }: OutputPageProps) {
         ))}
       </ul>
 
-      <h2>関連するQiita記事</h2>
+      {/* <h2>関連するQiita記事</h2>
       <ul>
         {qiitaArticles.map((article) => (
           <li key={article.url}>
-            <a href={article.url} target="_blank" rel="noopener noreferrer">
-              {article.title}
-            </a>
-            <span>
-              {" "}
-              by {article.user.name} (
-              {new Date(article.created_at).toLocaleDateString()})
-            </span>
+            <a href={article.url} target="_blank" rel="noopener noreferrer">{article.title}</a>
+            <span> by {article.user.name} ({new Date(article.created_at).toLocaleDateString()})</span>
           </li>
         ))}
-      </ul>
+      </ul> */}
 
       <p>作成日時: {new Date(output.createdAt).toLocaleString()}</p>
     </div>

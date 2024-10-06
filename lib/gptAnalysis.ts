@@ -1,51 +1,44 @@
 import OpenAI from "openai";
+import { z } from "zod";
+import { zodResponseFormat } from "openai/helpers/zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-interface AnalysisResult {
-  correctedText: string;
-  analysis: string;
-  officialDocs: string[];
-}
+const AnalysisResult = z.object({
+  correctedText: z.string(),
+  analysis: z.string(),
+  officialDocs: z.array(z.string()),
+});
 
-export async function analyzeAndCorrectWithGPT(
-  content: string
-): Promise<AnalysisResult> {
+export async function analyzeAndCorrectWithGPT(content: string) {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const completion = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-mini-2024-07-18",
       messages: [
         {
           role: "system",
           content:
-            "You are an expert in web development and you will listen student's output about web developments. Analyze the given text, correct technical errors, analyze the content, and provide links to relevant official documentation. Output should be in Japanese.",
+            "あなたはWeb開発の専門家です。これから与えるテキストは、web開発初心者がweb開発について学んだ内容を、音声認識機能を通じてアウトプットしたものです。与えられたテキストを分析し、音声認識機能の誤認識を修正し、内容を分析し、関連する公式ドキュメントへのリンクを提供してください。分析出力の際は、初心者に教える時のように、まず学習できていることを褒めて、そこから優しい口調で出力してください。",
         },
         {
           role: "user",
-          content: `Analyze the following outputs related to web development. \n\n${content}\n\n1. Correct any technical errors or misconceptions and provide corrected text. \n2. Analyze the output and briefly describe key concepts and techniques.\n3.Provide up to three (3) links to official documentation related to the technology or concept being mentioned. `,
+          content: `以下のWeb開発に関連するテキストを分析してください。：\n\n${content}\n\n
+          
+          変数の中に格納するものは下記のとおりです\n
+          - correctedText: 音声認識の誤認識を修正し、正しい文章にしたもの\n
+          - analysis: correctedTextの内容を認識して、アウトプットのキーポイントや技術用語の説明をしたもの\n
+          - officialDocs: アウトプットに関連する技術やコンセプトに関する公式ドキュメントへのリンクを最大3つまで提供してください。\n
+          `,
         },
       ],
-      max_tokens: 700, //messages: 150tokens
+      response_format: zodResponseFormat(AnalysisResult, "analysis_result"),
     });
 
-    const result = response.choices[0].message.content;
-    if (!result) throw new Error("No result from GPT");
-
-    // 結果をパースして構造化データに変換
-    const [correctedText, analysis, docsSection] = result.split("\n\n");
-    const officialDocs = docsSection
-      .split("\n")
-      .filter((line) => line.startsWith("http"));
-
-    return {
-      correctedText: correctedText.replace("1. ", ""),
-      analysis: analysis.replace("2. ", ""),
-      officialDocs,
-    };
+    return completion.choices[0].message.parsed;
   } catch (error) {
-    console.error("Error analyzing with GPT:", error);
-    throw new Error("Failed to analyze and correct output");
+    console.error("GPTでの分析中にエラーが発生しました:", error);
+    throw new Error("出力の分析と修正に失敗しました");
   }
 }

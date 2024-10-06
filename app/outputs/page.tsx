@@ -20,7 +20,7 @@ export default async function OutputsPage() {
         {outputs.map((output) => (
           <li key={output.id}>
             <Link href={`/outputs/${output.id}`}>
-              {output.content.substring(0, 50)}...
+              {output.correctedContent.substring(0, 50)}...
             </Link>
             <span> - {new Date(output.createdAt).toLocaleDateString()}</span>
           </li>

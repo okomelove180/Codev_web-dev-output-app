@@ -6,13 +6,24 @@ import { saveOutput } from "@/lib/db";
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
 
+  console.log("Session:", session);
+
   if (!session || !session.user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
+  console.log("user ID:", session.user.id);
+
   try {
     const { originalContent, correctedContent, analysis, officialDocs } =
       await request.json();
+
+    console.log("Received data:", {
+      originalContent,
+      correctedContent,
+      analysis,
+      officialDocs,
+    });
 
     const output = await saveOutput(
       originalContent,
