@@ -6,16 +6,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const OfficialDoc = z.object({
+const RelatedLink = z.object({
   siteName: z.string(),
   url: z.string(),
   summary: z.string(),
+  isOfficial: z.boolean(),
 });
 
 const AnalysisResult = z.object({
   correctedText: z.string(),
   analysis: z.string(),
-  officialDocs: z.array(OfficialDoc),
+  relatedLinks: z.array(RelatedLink),
 });
 
 export async function analyzeAndCorrectWithGPT(content: string) {
@@ -35,11 +36,12 @@ export async function analyzeAndCorrectWithGPT(content: string) {
           変数の中に格納するものは下記のとおりです\n
           - correctedText: 音声認識の誤認識を修正し、正しい文章にしたもの\n
           - analysis: correctedTextの内容を認識して、アウトプットのキーポイントや技術用語の説明をしたもの\n
-          - officialDocs: アウトプットに関連する技術やコンセプトに関する公式ドキュメントへのリンクを最大3つまで提供してください。siteName: サイト名, url:サイトのURL, summary:サイトを見れば何がわかるかを50文字以内で記述。\n
+          - RelatedLink: 関連するリンク（公式ドキュメント2件、Qiita記事2件）。各リンクにはsiteName: サイト名、url: URL、summary: 内容の要約（100文字以内）、isOfficial: 公式ドキュメントかどうかの情報を含めてください。qiita記事のいいね数は多いもの、かつリンクが切れていないものにしてください。\n
           `,
         },
       ],
       response_format: zodResponseFormat(AnalysisResult, "analysis_result"),
+      max_tokens: 1000,
     });
 
     return completion.choices[0].message.parsed;

@@ -2,6 +2,7 @@ import React from "react";
 import { getOutputById } from "@/lib/db";
 // import { getRelatedQiitaArticles } from "@/lib/qiita";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 interface OutputPageProps {
   params: { id: string };
@@ -29,30 +30,39 @@ export default async function OutputPage({ params }: OutputPageProps) {
       <h2>分析</h2>
       <p>{output.analysis}</p>
 
-      <h2>関連する公式ドキュメント</h2>
+      <h2>関連リンク</h2>
+      <h3>公式ドキュメント</h3>
       <ul>
-        {output.officialDocs.map((doc) => (
-          <li key={doc.id}>
-            <h3>{doc.siteName}</h3>
-            <a href={doc.url} target="_blank" rel="noopener noreferrer">
-              {doc.url}
-            </a>
-            <p>{doc.summary}</p>
-          </li>
-        ))}
+        {output.relatedLinks
+          .filter((link) => link.isOfficial)
+          .map((link) => (
+            <li key={link.id}>
+              <h4>{link.siteName}</h4>
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                {link.url}
+              </a>
+              <p>{link.summary}</p>
+            </li>
+          ))}
       </ul>
 
-      {/* <h2>関連するQiita記事</h2>
+      <h3>Qiita記事/その他</h3>
       <ul>
-        {qiitaArticles.map((article) => (
-          <li key={article.url}>
-            <a href={article.url} target="_blank" rel="noopener noreferrer">{article.title}</a>
-            <span> by {article.user.name} ({new Date(article.created_at).toLocaleDateString()})</span>
-          </li>
-        ))}
-      </ul> */}
+        {output.relatedLinks
+          .filter((link) => !link.isOfficial)
+          .map((link) => (
+            <li key={link.id}>
+              <h4>{link.siteName}</h4>
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                {link.url}
+              </a>
+              <p>{link.summary}</p>
+            </li>
+          ))}
+      </ul>
 
       <p>作成日時: {new Date(output.createdAt).toLocaleString()}</p>
+      <Link href="/outputs">アウトプット一覧</Link>
     </div>
   );
 }

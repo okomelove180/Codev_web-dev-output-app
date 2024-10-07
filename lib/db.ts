@@ -6,7 +6,12 @@ export async function saveOutput(
   originalContent: string,
   correctedContent: string,
   analysis: string,
-  officialDocs: Array<{ siteName: string; url: string; summary: string }>,
+  relatedLinks: Array<{
+    siteName: string;
+    url: string;
+    summary: string;
+    isOfficial: boolean;
+  }>,
   userId: string
 ) {
   try {
@@ -14,21 +19,23 @@ export async function saveOutput(
       originalContent,
       correctedContent,
       analysis,
-      officialDocs,
+      relatedLinks,
       userId,
     });
+
     const output = await prisma.output.create({
       data: {
         originalContent,
         correctedContent,
         analysis,
-        officialDocs:{create: officialDocs},
         user: {
-        connect: {id: userId}
+          connect: { id: userId },
         },
+        relatedLinks: { create: relatedLinks },
       },
-      include: {officialDocs: true}
+      include: { relatedLinks: true },
     });
+
     console.log("Output saved successfully:", output);
     return output;
   } catch (error) {
@@ -58,7 +65,7 @@ export async function getOutputById(id: string) {
   try {
     return prisma.output.findUnique({
       where: { id },
-      include: { officialDocs: true }
+      include: { relatedLinks: true },
     });
   } catch (error) {
     console.error("Error fetching output:", error);

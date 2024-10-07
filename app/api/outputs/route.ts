@@ -15,21 +15,21 @@ export async function POST(request: NextRequest) {
   console.log("user ID:", session.user.id);
 
   try {
-    const { originalContent, correctedContent, analysis, officialDocs } =
+    const { originalContent, correctedContent, analysis, relatedLinks } =
       await request.json();
 
     console.log("Received data:", {
       originalContent,
       correctedContent,
       analysis,
-      officialDocs,
+      relatedLinks,
     });
 
     const output = await saveOutput(
       originalContent,
       correctedContent,
       analysis,
-      officialDocs,
+      relatedLinks,
       session.user.id
     );
 

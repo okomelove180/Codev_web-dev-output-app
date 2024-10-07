@@ -59,7 +59,7 @@ const NewOutputPage: React.FC = () => {
           originalContent: transcription,
           correctedContent: analysisResult.correctedText,
           analysis: analysisResult.analysis,
-          officialDocs: analysisResult.officialDocs,
+          relatedLinks: analysisResult.relatedLinks,
         }),
       });
 
