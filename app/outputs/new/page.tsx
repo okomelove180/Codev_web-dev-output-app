@@ -34,7 +34,7 @@ const NewOutputPage: React.FC = () => {
 
       const { text: transcription } = await transcribeResponse.json();
 
-      // GPTによる分析と修正
+      // GPTによる分析_修正_提案
       const analyzeResponse = await fetch("/api/analyze", {
         method: "POST",
         headers: {

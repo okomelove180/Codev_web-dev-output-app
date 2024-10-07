@@ -18,23 +18,24 @@ model User {
 }
 
 model Output {
-  id               String         @id @default(cuid())
+  id               String        @id @default(cuid())
   originalContent  String
   correctedContent String
   analysis         String
   relatedLinks     RelatedLink[]
   userId           String
-  user             User           @relation(fields: [userId], references: [id])
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  user             User          @relation(fields: [userId], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 }
 
 model RelatedLink {
-  id         String   @id @default(cuid())
-  siteName   String
-  url        String
-  summary    String
-  isOfficial Boolean
-  output     Output   @relation(fields: [outputId], references: [id])
-  outputId   String
+  id          String  @id @default(cuid())
+  siteName    String
+  url         String
+  summary     String
+  likes_count Int?
+  isOfficial  Boolean
+  output      Output  @relation(fields: [outputId], references: [id])
+  outputId    String
 }

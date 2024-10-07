@@ -10,33 +10,32 @@ export async function saveOutput(
     siteName: string;
     url: string;
     summary: string;
+    likes_count: number;
     isOfficial: boolean;
   }>,
   userId: string
 ) {
   try {
-    console.log("Saving output with data:", {
-      originalContent,
-      correctedContent,
-      analysis,
-      relatedLinks,
-      userId,
-    });
-
     const output = await prisma.output.create({
       data: {
         originalContent,
         correctedContent,
         analysis,
-        user: {
-          connect: { id: userId },
+        relatedLinks: {
+          create: relatedLinks.map((link) => ({
+            siteName: link.siteName,
+            url: link.url,
+            summary: link.summary,
+            likes_count: link.likes_count, // undefined の場合は Prisma が null として扱います
+            isOfficial: link.isOfficial,
+          })),
         },
-        relatedLinks: { create: relatedLinks },
+        userId,
       },
-      include: { relatedLinks: true },
+      include: {
+        relatedLinks: true,
+      },
     });
-
-    console.log("Output saved successfully:", output);
     return output;
   } catch (error) {
     console.error("Error saving output:", error);

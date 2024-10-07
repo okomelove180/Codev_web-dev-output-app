@@ -3,7 +3,16 @@ import { analyzeAndCorrectWithGPT } from "@/lib/gptAnalysis";
 
 export async function POST(request: NextRequest) {
   try {
-    const { content } = await request.json();
+    const body = await request.json();
+    const { content } = body;
+
+    if (!content || typeof content !== "string") {
+      return NextResponse.json(
+        { error: "Invalid content provided" },
+        { status: 400 }
+      );
+    }
+
     const analysisResult = await analyzeAndCorrectWithGPT(content);
     return NextResponse.json(analysisResult);
   } catch (error) {

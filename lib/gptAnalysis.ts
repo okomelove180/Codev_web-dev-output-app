@@ -1,23 +1,80 @@
 import OpenAI from "openai";
 import { z } from "zod";
+import axios from "axios";
 import { zodResponseFormat } from "openai/helpers/zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const RelatedLink = z.object({
+const OfficialDocLink = z.object({
   siteName: z.string(),
   url: z.string(),
   summary: z.string(),
-  isOfficial: z.boolean(),
+  isOfficial: z.literal(true),
 });
+
+const QiitaArticleLink = z.object({
+  siteName: z.string(),
+  url: z.string(),
+  summary: z.string(),
+  likes_count: z.number(),
+  isOfficial: z.literal(false),
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const RelatedLink = z.union([OfficialDocLink, QiitaArticleLink]);
 
 const AnalysisResult = z.object({
   correctedText: z.string(),
   analysis: z.string(),
-  relatedLinks: z.array(RelatedLink),
+  keywords: z.array(z.string()),
+  officialDocs: z.array(OfficialDocLink),
 });
+
+type QiitaArticleLinkType = z.infer<typeof QiitaArticleLink>;
+type RelatedLinkType = z.infer<typeof RelatedLink>;
+
+interface QiitaArticle {
+  title: string;
+  url: string;
+  body: string;
+  likes_count: number;
+}
+
+async function getQiitaArticles(
+  keyword: string,
+  limit: number = 2
+): Promise<QiitaArticleLinkType[]> {
+  try {
+    const response = await axios.get<QiitaArticle[]>(
+      `https://qiita.com/api/v2/items`,
+      {
+        params: {
+          query: keyword,
+          per_page: 20, // 多めに取得してフィルタリング
+        },
+        headers: {
+          Authorization: `Bearer ${process.env.QIITA_ACCESS_TOKEN}`,
+        },
+      }
+    );
+
+    return response.data
+      .sort((a, b) => b.likes_count - a.likes_count)
+      .slice(0, limit)
+      .map((article: QiitaArticle) => ({
+        siteName: article.title,
+        url: article.url,
+        summary: article.body.substring(0, 100), // 100文字に制限
+        likes_count: article.likes_count,
+        isOfficial: false,
+      }));
+  } catch (error) {
+    console.error("Error fetching Qiita articles:", error);
+    return [];
+  }
+}
 
 export async function analyzeAndCorrectWithGPT(content: string) {
   try {
@@ -36,15 +93,39 @@ export async function analyzeAndCorrectWithGPT(content: string) {
           変数の中に格納するものは下記のとおりです\n
           - correctedText: 音声認識の誤認識を修正し、正しい文章にしたもの\n
           - analysis: correctedTextの内容を認識して、アウトプットのキーポイントや技術用語の説明をしたもの\n
-          - RelatedLink: 関連するリンク（公式ドキュメント2件、Qiita記事2件）。各リンクにはsiteName: サイト名、url: URL、summary: 内容の要約（100文字以内）、isOfficial: 公式ドキュメントかどうかの情報を含めてください。qiita記事のいいね数は多いもの、かつリンクが切れていないものにしてください。\n
+          - keywords: 分析結果に関連する文書をQiitaAPIで検索するためのキーワード\n
+          - RelatedLink: 関連するリンク（公式ドキュメント2件）。httpsのみ許可します。各リンクにはsiteName: サイト名、url: URL、summary: 内容の要約（100文字以内）、isOfficial: 公式ドキュメントかどうかの情報を含めてください。\n
           `,
         },
       ],
       response_format: zodResponseFormat(AnalysisResult, "analysis_result"),
-      max_tokens: 1000,
+      max_tokens: 1500,
     });
 
-    return completion.choices[0].message.parsed;
+    const result = completion.choices[0].message.parsed;
+
+    if (!result) {
+      throw new Error("GPTの分析結果が空です");
+    }
+
+    console.log("GPT Response:", JSON.stringify(result, null, 2));
+
+    // Qiita記事の取得
+    const queryForQiitaApi = `${result.keywords.slice(0, 2).join(" OR ")}`;
+    console.log("Qiita API Query: ", queryForQiitaApi);
+
+    const qiitaArticles = await getQiitaArticles(queryForQiitaApi);
+    console.log("Qiita Articles: ", qiitaArticles);
+
+    const relatedLinks: RelatedLinkType[] = [
+      ...result.officialDocs,
+      ...qiitaArticles,
+    ];
+
+    return {
+      ...result,
+      relatedLinks,
+    };
   } catch (error) {
     console.error("GPTでの分析中にエラーが発生しました:", error);
     throw new Error("出力の分析と修正に失敗しました");
