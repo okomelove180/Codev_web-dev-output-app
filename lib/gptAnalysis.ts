@@ -43,16 +43,20 @@ interface QiitaArticle {
 }
 
 async function getQiitaArticles(
-  keyword: string,
+  keywords: string[],
   limit: number = 2
 ): Promise<QiitaArticleLinkType[]> {
   try {
+    const query = `contents=${keywords.join(" ")}`;
+    console.log("query: ", query);
+
     const response = await axios.get<QiitaArticle[]>(
       `https://qiita.com/api/v2/items`,
       {
         params: {
-          query: keyword,
-          per_page: 20, // 多めに取得してフィルタリング
+          query: query,
+          per_page: 50, // より多くの記事を取得
+          page: 1,
         },
         headers: {
           Authorization: `Bearer ${process.env.QIITA_ACCESS_TOKEN}`,
@@ -60,13 +64,27 @@ async function getQiitaArticles(
       }
     );
 
-    return response.data
+    console.log(response.title, response.likes_count);
+
+    // タイトルまたは本文にキーワードを含む記事をフィルタリング
+    const filteredArticles = response.data.filter((article) =>
+      keywords.some(
+        (keyword) =>
+          article.title.toLowerCase().includes(keyword.toLowerCase()) ||
+          article.body.toLowerCase().includes(keyword.toLowerCase())
+      )
+    );
+
+    return filteredArticles
       .sort((a, b) => b.likes_count - a.likes_count)
       .slice(0, limit)
       .map((article: QiitaArticle) => ({
         siteName: article.title,
         url: article.url,
-        summary: article.body.substring(0, 100), // 100文字に制限
+        summary:
+          article.body.length > 100
+            ? article.title.substring(0, 97) + "..."
+            : article.title,
         likes_count: article.likes_count,
         isOfficial: false,
       }));
@@ -93,7 +111,7 @@ export async function analyzeAndCorrectWithGPT(content: string) {
           変数の中に格納するものは下記のとおりです\n
           - correctedText: 音声認識の誤認識を修正し、正しい文章にしたもの\n
           - analysis: correctedTextの内容を認識して、アウトプットのキーポイントや技術用語の説明をしたもの\n
-          - keywords: 分析結果に関連する文書をQiitaAPIで検索するためのキーワード\n
+          - keywords: 分析結果に関連する文書をQiitaAPIで検索するためのキーワードを 2or3件格納\n
           - RelatedLink: 関連するリンク（公式ドキュメント2件）。httpsのみ許可します。各リンクにはsiteName: サイト名、url: URL、summary: 内容の要約（100文字以内）、isOfficial: 公式ドキュメントかどうかの情報を含めてください。\n
           `,
         },
@@ -111,10 +129,7 @@ export async function analyzeAndCorrectWithGPT(content: string) {
     console.log("GPT Response:", JSON.stringify(result, null, 2));
 
     // Qiita記事の取得
-    const queryForQiitaApi = `${result.keywords.slice(0, 2).join(" OR ")}`;
-    console.log("Qiita API Query: ", queryForQiitaApi);
-
-    const qiitaArticles = await getQiitaArticles(queryForQiitaApi);
+    const qiitaArticles = await getQiitaArticles(result.keywords);
     console.log("Qiita Articles: ", qiitaArticles);
 
     const relatedLinks: RelatedLinkType[] = [
