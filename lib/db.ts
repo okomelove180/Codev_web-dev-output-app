@@ -13,7 +13,8 @@ export async function saveOutput(
     likes_count: number;
     isOfficial: boolean;
   }>,
-  userId: string
+  userId: string,
+  language: string
 ) {
   try {
     const output = await prisma.output.create({
@@ -31,6 +32,7 @@ export async function saveOutput(
           })),
         },
         userId,
+        language,
       },
       include: {
         relatedLinks: true,

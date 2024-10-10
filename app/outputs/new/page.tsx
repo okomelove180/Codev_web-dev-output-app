@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AudioRecorder from "@/components/AudioRecorder";
+import LanguageSelect from "@/components/LanguageSelect";
 
 const NewOutputPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -14,6 +16,11 @@ const NewOutputPage: React.FC = () => {
     if (!session?.user) {
       console.error("User not authenticated");
       router.push("/login");
+      return;
+    }
+
+    if (!selectedLanguage) {
+      alert("言語を選択してください");
       return;
     }
 
@@ -40,7 +47,10 @@ const NewOutputPage: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content: transcription }),
+        body: JSON.stringify({
+          content: transcription,
+          language: selectedLanguage,
+        }),
       });
 
       if (!analyzeResponse.ok) {
@@ -60,6 +70,7 @@ const NewOutputPage: React.FC = () => {
           correctedContent: analysisResult.correctedText,
           analysis: analysisResult.analysis,
           relatedLinks: analysisResult.relatedLinks,
+          language: selectedLanguage,
         }),
       });
 
@@ -74,6 +85,7 @@ const NewOutputPage: React.FC = () => {
     } catch (error) {
       console.error("Error during processing:", error);
       // エラーハンドリングをここに追加（例：ユーザーへの通知）
+      alert("エラーが発生しました。再度試してください。");
     } finally {
       setIsProcessing(false);
     }
@@ -82,6 +94,7 @@ const NewOutputPage: React.FC = () => {
   return (
     <div>
       <h1>新規アウトプット</h1>
+      <LanguageSelect onLanguageChange={setSelectedLanguage} />
       <AudioRecorder onRecordingComplete={handleRecordingComplete} />
       {isProcessing && <p>処理中...</p>}
     </div>

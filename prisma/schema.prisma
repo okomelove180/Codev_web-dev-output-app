@@ -22,6 +22,7 @@ model Output {
   originalContent  String
   correctedContent String
   analysis         String
+  language         String
   relatedLinks     RelatedLink[]
   userId           String
   user             User          @relation(fields: [userId], references: [id])
