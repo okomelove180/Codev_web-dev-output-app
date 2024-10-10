@@ -57,6 +57,7 @@ export default async function OutputPage({ params }: OutputPageProps) {
                 {link.url}
               </a>
               <p>{link.summary}</p>
+              <p>いいね数: {link.likes_count}</p>
             </li>
           ))}
       </ul>
