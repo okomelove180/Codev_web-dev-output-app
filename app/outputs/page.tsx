@@ -4,6 +4,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getOutputs } from "@/lib/db";
 import Link from "next/link";
 
+
+
 export default async function OutputsPage() {
   const session = await getServerSession(authOptions);
 
