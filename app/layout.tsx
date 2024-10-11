@@ -1,6 +1,8 @@
 import '@/app/globals.css'
 import { ThemeProvider } from "@/components/theme-provider"
 import Navigation from "@/components/navigation"
+import { Providers } from "@/components/providers"
+
 
 
 export const metadata = {
@@ -13,12 +15,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex flex-col min-h-screen">
-            <Navigation />
-            <main className="flex-grow">{children}</main>
-          </div>
+          <Providers>
+            <div className="flex flex-col min-h-screen">
+              <Navigation />
+              <main className="flex-grow">{children}</main>
+            </div>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

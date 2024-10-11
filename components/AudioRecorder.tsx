@@ -1,17 +1,27 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface AudioRecorderProps {
   onRecordingComplete: (blob: Blob) => void;
+  isDisabled: boolean,
 }
+
+const MAX_RECORDING_TIME = 60; // 60秒の最大録音時間
 
 const AudioRecorder: React.FC<AudioRecorderProps> = ({
   onRecordingComplete,
+  isDisabled,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleToggleRecording = () => {
+    if (isDisabled) return;
+    setIsRecording(!isRecording);
+  };
 
   const startRecording = useCallback(async () => {
     try {
@@ -31,9 +41,15 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorderRef.current.start();
-      setIsRecording(true);
+      setRecordingTime(0);
       timerRef.current = setInterval(() => {
-        setRecordingTime((prevTime) => prevTime + 1);
+        setRecordingTime((prevTime) => {
+          if (prevTime >= MAX_RECORDING_TIME - 1) {
+            stopRecording();
+            return MAX_RECORDING_TIME;
+          }
+          return prevTime + 1;
+        });
       }, 1000);
     } catch (error) {
       console.error("Error starting recording:", error);
@@ -41,27 +57,39 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   }, [onRecordingComplete]);
 
   const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.stream
         .getTracks()
         .forEach((track) => track.stop());
-      setIsRecording(false);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      setRecordingTime(0);
     }
-  }, [isRecording]);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    setRecordingTime(0);
+  }, []);
+
+  useEffect(() => {
+    if (isRecording) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
+  }, [isRecording, startRecording, stopRecording]);
 
   return (
     <div>
-      {!isRecording ? (
-        <button onClick={startRecording}>録音開始</button>
-      ) : (
-        <div>
-          <button onClick={stopRecording}>録音停止</button>
-          <p>録音時間: {recordingTime}秒</p>
+      <Button
+        size="lg"
+        className="w-full h-32 text-2xl"
+        onClick={handleToggleRecording}
+        disabled={isDisabled}
+      >
+        {isRecording ? "録音停止" : "録音開始"}
+      </Button>
+      {isRecording && (
+        <div className="mt-2 text-center">
+          録音時間: {recordingTime}秒 / {MAX_RECORDING_TIME}秒
         </div>
       )}
     </div>
