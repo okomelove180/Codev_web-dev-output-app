@@ -1,4 +1,5 @@
 import React from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const languages = [
   "HTML",
@@ -18,14 +19,18 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({
   onLanguageChange,
 }) => {
   return (
-    <select onChange={(e) => onLanguageChange(e.target.value)}>
-      <option value="">勉強中の言語orフレームワークを選択</option>
-      {languages.map((lang) => (
-        <option key={lang} value={lang}>
-          {lang}
-        </option>
-      ))}
-    </select>
+    <Select onValueChange={onLanguageChange}>
+      <SelectTrigger>
+        <SelectValue placeholder="勉強中の言語orフレームワークを選択" />
+      </SelectTrigger>
+      <SelectContent>
+        {languages.map((lang) => (
+          <SelectItem key={lang} value={lang}>
+            {lang}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
 

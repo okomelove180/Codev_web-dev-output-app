@@ -1,23 +1,39 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-export default function Login() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+
+export default function LoginPage() {
   const router = useRouter();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const result = await signIn("credentials", {
       redirect: false,
-      email,
-      password,
+      email: values.email,
+      password: values.password,
     });
     if (result?.error) {
-      // エラー処理
       console.error(result.error);
     } else {
       router.push("/");
@@ -25,26 +41,57 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setEmail(e.target.value)
-        }
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setPassword(e.target.value)
-        }
-        placeholder="Password"
-        required
-      />
-      <button type="submit">ログイン</button>
-    </form>
-  );
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">Web Developer's Output App</CardTitle>
+          <CardDescription className="text-center">Login to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>メールアドレス</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        {...field}
+                        placeholder="メールアドレスを入力"
+                        required
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>パスワード</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        placeholder="パスワードを入力"
+                        required
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full mt-4" type="submit">ログイン</Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <Button variant="link">Don't have an account? Sign up</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  )
 }
