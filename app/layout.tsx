@@ -1,18 +1,16 @@
-"use client";
+import '@/app/globals.css'
+import { ThemeProvider } from "@/components/theme-provider"
+import Navigation from "@/components/navigation"
 
-import React from "react";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "@/components/theme-provider";
-import Navigation from "@/components/navigation";
 
-interface RootLayoutProps {
-  title: "Web Developer's Output App";
-  children: React.ReactNode;
+export const metadata = {
+  title: "Web Developer's Output App",
+  description: "Record and analyze your web development learnings",
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja">
+    <html lang="en">
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex flex-col min-h-screen">
@@ -22,5 +20,5 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
