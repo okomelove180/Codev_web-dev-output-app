@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { z } from "zod";
+import { z, ZodString } from "zod";
 import axios from "axios";
 import { zodResponseFormat } from "openai/helpers/zod";
 
@@ -26,6 +26,7 @@ const QiitaArticleLink = z.object({
 const RelatedLink = z.union([OfficialDocLink, QiitaArticleLink]);
 
 const AnalysisResult = z.object({
+  title: z.string(),
   correctedText: z.string(),
   analysis: z.string(),
   keywords: z.array(z.string()),
@@ -165,6 +166,7 @@ export async function analyzeAndCorrectWithGPT(
 
               json
               {
+                "title": "Make the title of this output based on your correctedText",
                 "correctedText": "Corrected version of the text in Japanese",
                 "analysis": "Explanation of key points and terms from the corrected text in Japanese",
                 "keywords": ["keyword1", "keyword2"],

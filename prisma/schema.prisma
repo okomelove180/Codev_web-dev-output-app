@@ -19,6 +19,7 @@ model User {
 
 model Output {
   id               String        @id @default(cuid())
+  title            String
   originalContent  String
   correctedContent String
   analysis         String

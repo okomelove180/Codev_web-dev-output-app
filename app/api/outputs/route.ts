@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const {
+      title,
       originalContent,
       correctedContent,
       analysis,
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     console.log("Received data:", {
+      title,
       originalContent,
       correctedContent,
       analysis,
@@ -32,6 +34,7 @@ export async function POST(request: NextRequest) {
     });
 
     const output = await saveOutput(
+      title,
       originalContent,
       correctedContent,
       analysis,

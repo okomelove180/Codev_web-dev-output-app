@@ -63,6 +63,7 @@ const NewOutputClient: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          title: analysisResult.title,
           originalContent: transcription,
           correctedContent: analysisResult.correctedText,
           analysis: analysisResult.analysis,

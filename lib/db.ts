@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function saveOutput(
+  title: string,
   originalContent: string,
   correctedContent: string,
   analysis: string,
@@ -19,6 +20,7 @@ export async function saveOutput(
   try {
     const output = await prisma.output.create({
       data: {
+        title,
         originalContent,
         correctedContent,
         analysis,
