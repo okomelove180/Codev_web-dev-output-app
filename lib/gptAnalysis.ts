@@ -133,7 +133,7 @@ export async function analyzeAndCorrectWithGPT(
           role: "system",
           content: `
             You are a web development expert. Analyze the text provided by a web development beginner in Japan, which has been transcribed through speech recognition.
-            Your task is to correct any speech recognition errors, analyze the content, and provide relevant official documentation links shown below "Resources for Documentation Links". Check the link whther it has expired or not.
+            Your task is to correct any speech recognition errors, analyze the content, and provide relevant official documentation links shown below "Resources for Documentation Links". Check the link whether it has expired or not.
             When giving feedback, praise what the beginner has learned and explain the analysis gently.
             - **Resources for Documentation Links:**
               - HTML, CSS, JavaScript: MDN web docs (https://developer.mozilla.org/ja/)
@@ -154,8 +154,7 @@ export async function analyzeAndCorrectWithGPT(
               - Put into "analysis"
 
             3. **Provide Related Keywords and Links:**
-              - Identify 3 keywords from your analysis that can be used to search related documents using the QiitaAPI.
-                Words that appear at the beginning of a sentence or words that appear repeatedly are likely to be keywords.
+              - Identify 3 keywords from your "analysis" results that can be used to search related documents using the QiitaAPI.
               - Provide one related official documentation links containing:
                 - siteName: The name of the site.
                 - url: The URL of the site. Suggest a link to the official ${language}'s reference. Actively suggest its child pages. Do not put on the expired link.
@@ -169,7 +168,7 @@ export async function analyzeAndCorrectWithGPT(
                 "title": "Make the title of this output based on your correctedText",
                 "correctedText": "Corrected version of the text in Japanese",
                 "analysis": "Explanation of key points and terms from the corrected text in Japanese",
-                "keywords": ["keyword1", "keyword2"],
+                "keywords": ["keyword1", "keyword2"], // pick up from "analysis"
                 "RelatedLink": [
                   {
                     "siteName": "Site Name 1",

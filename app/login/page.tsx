@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -28,15 +29,28 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
-    if (result?.error) {
-      console.error(result.error);
-    } else {
-      router.push("/");
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+      if (result?.error) {
+        toast({
+          title: "ログインエラー",
+          description: "メールアドレスまたはパスワードが正しくありません。",
+          variant: "destructive",
+        });
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("ログインエラー:", error);
+      toast({
+        title: "エラー",
+        description: "ログイン中に問題が発生しました。もう一度お試しください。",
+        variant: "destructive",
+      });
     }
   };
 

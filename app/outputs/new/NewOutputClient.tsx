@@ -7,38 +7,54 @@ import AudioRecorder from "@/components/AudioRecorder";
 import LanguageSelect from "@/components/LanguageSelect";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const NewOutputClient: React.FC = () => {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingStage, setProcessingStage] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
-    if (!session?.user) {
-      console.error("User not authenticated");
+    if (!session?.user?.id) {
+      toast({
+        title: "認証エラー",
+        description: "ログインが必要です。",
+        variant: "destructive",
+      });
       router.push("/login");
       return;
     }
 
-    setIsProcessing(true);
+    if (!selectedLanguage) {
+      toast({
+        title: "言語選択エラー",
+        description: "言語を選択してください。",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("audio", audioBlob, "recording.webm");
 
       // 音声認識
+      setProcessingStage("音声認識中");
       const transcribeResponse = await fetch("/api/transcribe", {
         method: "POST",
         body: formData,
       });
 
       if (!transcribeResponse.ok) {
-        throw new Error("Transcription failed");
+        const errorData = await transcribeResponse.json();
+        throw new Error(`Transcription failed: ${errorData.error}`);
       }
 
       const { text: transcription } = await transcribeResponse.json();
 
       // GPTによる分析_修正_提案
+      setProcessingStage("分析中");
       const analyzeResponse = await fetch("/api/analyze", {
         method: "POST",
         headers: {
@@ -57,6 +73,7 @@ const NewOutputClient: React.FC = () => {
       const analysisResult = await analyzeResponse.json();
 
       // 結果をデータベースに保存
+      setProcessingStage("保存中");
       const saveResponse = await fetch("/api/outputs", {
         method: "POST",
         headers: {
@@ -78,13 +95,20 @@ const NewOutputClient: React.FC = () => {
 
       const { id } = await saveResponse.json();
 
-      // アウトプット詳細ページにリダイレクト
+      toast({
+        title: "処理完了",
+        description: "アウトプットが正常に保存されました。",
+      });
       router.push(`/outputs/${id}`);
     } catch (error) {
       console.error("Error during processing:", error);
-      alert("エラーが発生しました。再度試してください。");
+      toast({
+        title: "エラー",
+        description: `処理中にエラーが発生しました: ${(error as Error).message}`,
+        variant: "destructive",
+      });
     } finally {
-      setIsProcessing(false);
+      setProcessingStage(null);
     }
   };
 
@@ -102,9 +126,9 @@ const NewOutputClient: React.FC = () => {
           <LanguageSelect onLanguageChange={handleLanguageChange} />
           <AudioRecorder
             onRecordingComplete={handleRecordingComplete}
-            isDisabled={!selectedLanguage || isProcessing}
+            isDisabled={!selectedLanguage || !!processingStage}
           />
-          {isProcessing && <p>処理中...</p>}
+          {processingStage && <p>{processingStage}...</p>}
         </CardContent>
       </Card>
     </div>
