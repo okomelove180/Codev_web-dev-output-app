@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, PlusCircle } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { Output, RelatedLink } from "@prisma/client"
 import { Button } from "./ui/button"
 import Link from "next/link"
