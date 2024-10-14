@@ -24,9 +24,9 @@ export async function getRelatedQiitaArticles(
       }
     );
 
-    return response.data;
+    return response.data as QiitaArticle[];
   } catch (error) {
-    console.error("Error fetching Qiita articles:", error);
-    throw new Error("Failed to fetch Qiita articles");
+    console.error("Qiita記事の取得中にエラーが発生しました:", error);
+    throw new Error("Qiita記事の取得に失敗しました");
   }
 }

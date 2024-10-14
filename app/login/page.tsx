@@ -3,7 +3,6 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -58,8 +57,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Web Developer's Output App</CardTitle>
-          <CardDescription className="text-center">Login to your account</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">Web Developer&apos;s Output App</CardTitle>
+          <CardDescription className="text-center">アカウントにログイン</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -103,7 +102,7 @@ export default function LoginPage() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="link">Don't have an account? Sign up</Button>
+          <Button variant="link">アカウントをお持ちでない方はこちら</Button>
         </CardFooter>
       </Card>
     </div>

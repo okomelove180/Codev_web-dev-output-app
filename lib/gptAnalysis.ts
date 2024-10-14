@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { z, ZodString } from "zod";
+import { z } from "zod";
 import axios from "axios";
 import { zodResponseFormat } from "openai/helpers/zod";
 

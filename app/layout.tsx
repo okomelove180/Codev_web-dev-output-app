@@ -3,12 +3,12 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Navigation from "@/components/navigation"
 import { Providers } from "@/components/providers"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth";
 import { Toaster } from "@/components/ui/toaster"
 
 
 export const metadata = {
-  title: "Web Developer's Output App",
+  title: "Web Developer&apos;s Output App",
   description: "Record and analyze your web development learnings",
 }
 

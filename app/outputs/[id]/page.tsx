@@ -1,8 +1,6 @@
 import React from "react";
 import { getOutputById } from "@/lib/db";
 import OutputDetailPreview from "@/components/OutputDetailPreview";
-import { notFound } from "next/navigation";
-import Link from "next/link";
 
 interface OutputPageProps {
   params: { id: string };

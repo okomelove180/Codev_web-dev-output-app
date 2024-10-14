@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import AudioRecorder from "@/components/AudioRecorder";
 import LanguageSelect from "@/components/LanguageSelect";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
 const NewOutputClient: React.FC = () => {

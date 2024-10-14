@@ -1,13 +1,13 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, BookOpen, PenTool, List } from "lucide-react"
+import { Card, CardContent,  CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowRight, PenTool, List } from "lucide-react"
 
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Web Developer's Output App</h1>
+        <h1 className="text-4xl font-bold mb-4">Web Developer&apos;s Output App</h1>
         <p className="text-xl text-muted-foreground">記録し、分析し、成長する。あなたの学習をサポートします。</p>
       </header>
 
@@ -53,7 +53,7 @@ export default function HomePage() {
       </div>
 
       <footer className="mt-12 text-center text-muted-foreground">
-        <p>&copy; 2024 Web Developer's Output App. All rights reserved.</p>
+        <p>`&copy; 2024 Web Developer&apos;s Output App. All rights reserved.`</p>
       </footer>
     </div>
   )

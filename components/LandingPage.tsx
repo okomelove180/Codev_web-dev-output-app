@@ -64,7 +64,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <div className="container mx-auto px-4 py-16">
         <header className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-4">Web Developer's Output App</h1>
+          <h1 className="text-5xl font-bold mb-4">Web Developer&apos;s Output App</h1>
           <p className="text-xl text-muted-foreground mb-8">あなたの学びをアウトプットしよう。</p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">
@@ -147,7 +147,7 @@ export default function LandingPage() {
 
       <footer className="bg-background py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2024 Web Developer's Output App. All rights reserved.</p>
+          <p>`&copy; 2024 Web Developer&apos;s Output App. All rights reserved.`</p>
         </div>
       </footer>
     </div>
