@@ -11,6 +11,7 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -102,7 +103,9 @@ export default function LoginPage() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button variant="link">アカウントをお持ちでない方はこちら</Button>
+          <Button variant="link" asChild>
+            <Link href="/signup">アカウントをお持ちでない方はこちら</Link>
+          </Button>
         </CardFooter>
       </Card>
     </div>
