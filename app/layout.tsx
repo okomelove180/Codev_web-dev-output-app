@@ -2,7 +2,9 @@ import '@/app/globals.css'
 import { ThemeProvider } from "@/components/theme-provider"
 import Navigation from "@/components/navigation"
 import { Providers } from "@/components/providers"
-
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { Toaster } from "@/components/ui/toaster"
 
 
 export const metadata = {
@@ -10,19 +12,24 @@ export const metadata = {
   description: "Record and analyze your web development learnings",
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en">
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Providers>
-            <div className="flex flex-col min-h-screen">
-              <Navigation />
-              <main className="flex-grow">{children}</main>
-            </div>
-          </Providers>
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {session && <Navigation />}
+            <main className="flex-grow">{children}</main>
+            <Toaster />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
-  );
+  )
 }
