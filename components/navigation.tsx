@@ -15,9 +15,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
 export default function Navigation() {
   const pathname = usePathname();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' });
+  };
 
   return (
     <header className="border-b">
@@ -49,7 +54,7 @@ export default function Navigation() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>ログアウト</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

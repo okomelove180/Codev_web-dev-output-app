@@ -145,12 +145,12 @@ export async function analyzeAndCorrectWithGPT(
             # Steps
 
             1. **Correct Speech Recognition Errors:** 
-              - Review the provided text and correct any errors caused by speech recognition inaccuracies.
+              - Review the provided web development beginner's outputs and correct any errors caused by speech recognition inaccuracies.
               - Put into ”correctedText”.
             
             2. **Analyze Content:**
               - Extract key points and provide explanations for technical terms within the corrected text.
-              - Highlight the learner's achievements and provide gentle explanations.
+              - Highlight the learner's achievements and provide gentle explanations and any Tips for the beginner.
               - Put into "analysis"
 
             3. **Provide Related Keywords and Links:**

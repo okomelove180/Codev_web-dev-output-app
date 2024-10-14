@@ -11,7 +11,7 @@ export default function HomePage() {
         <p className="text-xl text-muted-foreground">記録し、分析し、成長する。あなたの学習をサポートします。</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
@@ -20,7 +20,7 @@ export default function HomePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p>あなたの学びを1分間でアウトプットしましょう。<br />
+            <p>あなたの学びを1分間でアウトプットしましょう。
             AIによる分析、修正、提案を受けることができます。</p>
           </CardContent>
           <CardFooter>
@@ -46,25 +46,6 @@ export default function HomePage() {
             <Button variant="outline" asChild>
               <Link href="/outputs">
                 一覧を見る <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <BookOpen className="mr-2" />
-              学習リソース
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Web開発に関する有用なリソースやチュートリアルへのリンクを提供しています。学習の助けにご活用ください。</p>
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" asChild>
-              <Link href="/resources">
-                リソースを見る <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </CardFooter>
