@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, PlusCircle } from "lucide-react"
 import { Output, RelatedLink } from "@prisma/client"
+import { Button } from "./ui/button"
+import Link from "next/link"
 
 const formatMarkdown = (text: string) => {
   return text
@@ -80,6 +82,16 @@ export default function Component({ output }: OutputDetailPreviewProps) {
           </div>
         </CardContent>
       </Card>
+
+      <Button asChild
+        size="lg"
+        className="fixed bottom-8 right-8 rounded-full shadow-lg"
+      >
+        <Link href="/outputs">
+          Output一覧に戻る
+        </Link>
+      </Button>
+
     </div>
   )
 }

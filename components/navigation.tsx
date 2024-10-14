@@ -15,11 +15,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navigation() {
   const pathname = usePathname();
-
+  const { data: session } = useSession();
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
   };
@@ -37,6 +37,13 @@ export default function Navigation() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <Link href="/outputs/new" passHref legacyBehavior>
+                <NavigationMenuLink active={pathname.startsWith("/outputs/new")}>
+                  New Output
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Link href="/outputs" passHref legacyBehavior>
                 <NavigationMenuLink active={pathname.startsWith("/outputs")}>
                   Outputs
@@ -45,18 +52,33 @@ export default function Navigation() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarImage src="/avatar.png" alt="User" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSignOut}>ログアウト</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center">
+          {session?.user?.name && (
+            <span className="mr-2 text-sm font-medium hidden sm:inline-block">
+              {session.user.name} さんがログイン中
+            </span>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="focus:outline-none">
+              <Avatar>
+                <AvatarImage src="/avatar.png" alt={session?.user?.name || "User"} />
+                <AvatarFallback>
+                  {session?.user?.name ? session.user.name[0].toUpperCase() : "U"}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <Link href="/profile" className="w-full">
+                  プロフィール
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut}>
+                ログアウト
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

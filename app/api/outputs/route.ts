@@ -8,11 +8,13 @@ export async function POST(request: NextRequest) {
 
   console.log("Session:", session);
 
-  if (!session || !session.user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: "Not authenticated or user ID not found" }, { status: 401 });
   }
 
-  console.log("user ID:", session.user.id);
+  const userId = session.user.id;
+
+  console.log("User ID:", userId);  // デバッグ用
 
   try {
     const {

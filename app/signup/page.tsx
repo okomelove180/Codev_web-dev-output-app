@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Loader } from "lucide-react"
 
 const formSchema = z.object({
-  username: z.string().min(3, {
+  name: z.string().min(3, {
     message: "ユーザー名は3文字以上である必要があります。",
   }),
   email: z.string().email({
@@ -41,7 +41,7 @@ export default function SignUpPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -89,12 +89,12 @@ export default function SignUpPage() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>ユーザー名</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input placeholder="name" {...field} />
                   </FormControl>
                   <FormDescription>
                     あなたの公開プロフィールに表示されます

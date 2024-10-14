@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
 
 const prisma = new PrismaClient();
 
@@ -33,8 +35,8 @@ export async function saveOutput(
             isOfficial: link.isOfficial,
           })),
         },
-        userId,
-        language,
+        userId: userId,
+        language: language,
       },
       include: {
         relatedLinks: true,
@@ -43,6 +45,11 @@ export async function saveOutput(
     return output;
   } catch (error) {
     console.error("Error saving output:", error);
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === 'P2003') {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+    }
     throw error;
   }
 }

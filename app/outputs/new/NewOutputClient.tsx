@@ -18,7 +18,7 @@ const NewOutputClient: React.FC = () => {
     if (!session?.user?.id) {
       toast({
         title: "認証エラー",
-        description: "ログインが必要です。",
+        description: "ログインが必要です。セッションまたはユーザーIDが見つかりません。",
         variant: "destructive",
       });
       router.push("/login");

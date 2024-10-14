@@ -2,6 +2,7 @@ import React from "react";
 import { getOutputById } from "@/lib/db";
 import OutputDetailPreview from "@/components/OutputDetailPreview";
 
+
 interface OutputPageProps {
   params: { id: string };
 }
@@ -12,8 +13,6 @@ export default async function OutputPage({ params }: OutputPageProps) {
   if (!output) {
     return <div>出力が見つかりません</div>
   }
-
-  // const qiitaArticles = await getRelatedQiitaArticles(output.correctedContent.substring(0, 100));
 
   return (
     <OutputDetailPreview output={output} />

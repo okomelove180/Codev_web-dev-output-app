@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 
-export async function signUp({ email, password, username }: { email: string; password: string; username: string }) {
+export async function signUp({ email, password, name }: { email: string; password: string; name: string }) {
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -21,7 +21,7 @@ export async function signUp({ email, password, username }: { email: string; pas
   const user = await prisma.user.create({
     data: {
       email,
-      name: username,
+      name,
       password: hashedPassword,
     },
   });
