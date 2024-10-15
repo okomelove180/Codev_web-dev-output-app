@@ -42,7 +42,7 @@ export default function LoginPage() {
           variant: "destructive",
         });
       } else {
-        router.push("/");
+        await router.push("/");
       }
     } catch (error) {
       console.error("ログインエラー:", error);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -19,10 +20,25 @@ import { useSession, signOut } from "next-auth/react";
 
 export default function Navigation() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const [mounted, setMounted] = useState(false);
+
+  // ログイン状態を確認するためのフラグ
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
   };
+
+  if (!mounted) {
+    return null;
+  }
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <header className="border-b">
