@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form"
@@ -35,6 +35,7 @@ export default function LoginPage() {
         email: values.email,
         password: values.password,
       });
+
       if (result?.error) {
         toast({
           title: "ログインエラー",
@@ -42,7 +43,17 @@ export default function LoginPage() {
           variant: "destructive",
         });
       } else {
-        await router.push("/");
+        const session = await getSession();
+        if (session) {
+          router.push("/home");
+        } else {
+          console.error("セッションの取得に失敗しました");
+          toast({
+            title: "エラー",
+            description: "ログインに成功しましたが、セッションの取得に失敗しました。",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error("ログインエラー:", error);

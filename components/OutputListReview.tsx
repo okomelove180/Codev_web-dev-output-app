@@ -7,7 +7,7 @@ import { Output } from "@prisma/client";
 
 export default function Component({ outputs }: { outputs: Output[] }) {
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto px-4 py-8">
       {outputs.length === 0 ? (
         <div className="text-center py-8 px-8">
           <p className="text-xl">まだOutputがありません。右下のボタンから新規アウトプットを作成しましょう。</p>

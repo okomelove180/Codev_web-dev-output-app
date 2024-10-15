@@ -75,11 +75,11 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       // ログイン後のリダイレクト先を指定
       if (url.startsWith(baseUrl)) {
-        return url;
+        return `${baseUrl}/home`;
       } else if (url.startsWith("/")) {
-        return new URL(url, baseUrl).toString();
+        return `${baseUrl}/home`;
       }
-      return baseUrl;
+      return `${baseUrl}/home`;
     },
   },
   pages: {
