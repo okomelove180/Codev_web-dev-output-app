@@ -18,6 +18,42 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession, signOut } from "next-auth/react";
 
+function NavigationSkeleton() {
+  return (
+    <header className="border-b">
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+        <div className="w-1/3 h-8 bg-gray-200 rounded"></div>
+        <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+      </div>
+    </header>
+  );
+}
+
+function UserDropdown({ session, handleSignOut }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="focus:outline-none">
+        <Avatar>
+          <AvatarImage src="/avatar.png" alt={session?.user?.name || "User"} />
+          <AvatarFallback>
+            {session?.user?.name ? session.user.name[0].toUpperCase() : "U"}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>
+          <Link href="/profile" className="w-full">
+            プロフィール
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignOut}>
+          ログアウト
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export default function Navigation() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
@@ -33,11 +69,11 @@ export default function Navigation() {
   };
 
   if (!mounted) {
-    return null;
+    return <NavigationSkeleton />;
   }
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <NavigationSkeleton />;
   }
 
   return (
@@ -69,31 +105,18 @@ export default function Navigation() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex items-center">
-          {session?.user?.name && (
-            <span className="mr-2 text-sm font-medium hidden sm:inline-block">
-              {session.user.name} さんがログイン中
-            </span>
+          {session?.user?.name ? (
+            <>
+              <span className="mr-2 text-sm font-medium hidden sm:inline-block">
+                {session.user.name} さんがログイン中
+              </span>
+              <UserDropdown session={session} handleSignOut={handleSignOut} />
+            </>
+          ) : (
+            <Link href="/login" className="text-sm font-medium">
+              ログイン
+            </Link>
           )}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-none">
-              <Avatar>
-                <AvatarImage src="/avatar.png" alt={session?.user?.name || "User"} />
-                <AvatarFallback>
-                  {session?.user?.name ? session.user.name[0].toUpperCase() : "U"}
-                </AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Link href="/profile" className="w-full">
-                  プロフィール
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleSignOut}>
-                ログアウト
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </header>
