@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Navigation from "@/components/navigation"
 import { Providers } from "@/components/providers"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/auth-options";
 import { Toaster } from "@/components/ui/toaster"
 
 

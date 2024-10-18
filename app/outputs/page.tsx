@@ -1,6 +1,6 @@
 import React from "react";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/auth/auth-options";
 import { getOutputs } from "@/lib/db";
 import { redirect } from "next/navigation";
 import OutputListReview from "@/components/OutputListReview";
