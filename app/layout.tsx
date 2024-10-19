@@ -16,7 +16,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  
+
   const session = await getServerSession(authOptions)
 
   return (
@@ -24,7 +24,7 @@ export default async function RootLayout({
       <body>
         <Providers session={session}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Navigation serverSession={session} />
+            <Navigation serverSession={session ?? undefined} />
             <main className="flex-grow">{children}</main>
             <Toaster />
           </ThemeProvider>

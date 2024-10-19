@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession, signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
 function NavigationSkeleton() {
   return (
@@ -29,7 +30,7 @@ function NavigationSkeleton() {
   );
 }
 
-function UserDropdown({ session, handleSignOut }: { session: any, handleSignOut: () => void }) {
+function UserDropdown({ session, handleSignOut }: { session: Session, handleSignOut: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
@@ -54,9 +55,8 @@ function UserDropdown({ session, handleSignOut }: { session: any, handleSignOut:
   );
 }
 
-export default function Navigation({ serverSession }: { serverSession: any }) {
+export default function Navigation({ serverSession }: { serverSession: Session | undefined }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
 
