@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -29,7 +29,7 @@ function NavigationSkeleton() {
   );
 }
 
-function UserDropdown({ session, handleSignOut }) {
+function UserDropdown({ session, handleSignOut }: { session: any, handleSignOut: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
@@ -54,27 +54,29 @@ function UserDropdown({ session, handleSignOut }) {
   );
 }
 
-export default function Navigation() {
+export default function Navigation({ serverSession }: { serverSession: any }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
 
-  // ログイン状態を確認するためのフラグ
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' });
-  };
+  useEffect(() => {
+    console.log("Session status changed:", status, "Session:", session || serverSession);
+  }, [status, session, serverSession]);
 
   if (!mounted) {
     return <NavigationSkeleton />;
   }
 
-  if (status === "loading") {
-    return <NavigationSkeleton />;
-  }
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' });
+  };
+
+  const currentSession = session || serverSession;
 
   return (
     <header className="border-b">
@@ -105,12 +107,12 @@ export default function Navigation() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="flex items-center">
-          {session?.user?.name ? (
+          {currentSession?.user?.name ? (
             <>
               <span className="mr-2 text-sm font-medium hidden sm:inline-block">
-                {session.user.name} さんがログイン中
+                {currentSession.user.name} さんがログイン中
               </span>
-              <UserDropdown session={session} handleSignOut={handleSignOut} />
+              <UserDropdown session={currentSession} handleSignOut={handleSignOut} />
             </>
           ) : (
             <Link href="/login" className="text-sm font-medium">
