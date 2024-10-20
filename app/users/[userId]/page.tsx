@@ -27,9 +27,9 @@ export default async function UserProfilePage({ params }: { params: { userId: st
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid gap-6 md:grid-cols-4">
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {/* User Profile Card */}
-        <Card className="md:col-span-3">
+        <Card className="col-span-full sm:col-span-2 md:col-span-3">
           <CardHeader>
             <div className="flex items-center space-x-4">
               <Avatar className="h-20 w-20">
@@ -62,7 +62,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Quick Actions Card */}
-        <Card>
+        <Card className="col-span-full sm:col-span-2 md:col-span-1">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
@@ -73,7 +73,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Output Calendar Card */}
-        <Card className="md:col-span-4">
+        <Card className="col-span-full">
           <CardHeader>
             <CardTitle>Output Calendar</CardTitle>
           </CardHeader>
@@ -83,7 +83,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Recent Outputs Card */}
-        <Card className="md:col-span-3">
+        <Card className="col-span-full md:col-span-3">
           <CardHeader>
             <CardTitle>Recent Outputs</CardTitle>
           </CardHeader>
@@ -96,7 +96,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Skills Card */}
-        <Card>
+        <Card className="col-span-full sm:col-span-1">
           <CardHeader>
             <CardTitle>Skills</CardTitle>
           </CardHeader>
@@ -106,17 +106,17 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Learning Goals Card */}
-        <Card className="md:col-span-2">
+        <Card className="col-span-full sm:col-span-2">
           <CardHeader>
             <CardTitle>Learning Goals</CardTitle>
           </CardHeader>
           <CardContent>
-          <LearningGoals initialGoals={user.learningGoals} userId={user.id} />
+            <LearningGoals initialGoals={user.learningGoals} userId={user.id} />
           </CardContent>
         </Card>
 
         {/* Output Analytics Card */}
-        <Card className="md:col-span-4">
+        <Card className="col-span-full">
           <CardHeader>
             <CardTitle>Output Analytics</CardTitle>
           </CardHeader>
