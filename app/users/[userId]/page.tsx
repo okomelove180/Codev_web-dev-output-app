@@ -111,7 +111,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
             <CardTitle>Learning Goals</CardTitle>
           </CardHeader>
           <CardContent>
-            <LearningGoals goals={user.learningGoals} />
+          <LearningGoals initialGoals={user.learningGoals} userId={user.id} />
           </CardContent>
         </Card>
 

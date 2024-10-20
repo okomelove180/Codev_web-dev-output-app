@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { differenceInDays } from "date-fns";
+import { LearningGoal } from '@prisma/client'
 
 interface Output {
   id: string;
@@ -11,16 +12,6 @@ interface Output {
   analysis: string;
   language: string;
   userId: string;
-}
-
-interface LearningGoal {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  userId: string;
-  description: string;
-  completed: boolean;
 }
 
 interface UserProfile {
