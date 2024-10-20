@@ -46,7 +46,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="text-center">
-                <h3 className="text-lg font-semibold">Today's Outputs</h3>
+                <h3 className="text-lg font-semibold">Today&apos;s Outputs</h3>
                 <p className="text-3xl font-bold">{user.todayOutputs}</p>
               </div>
               <div className="text-center">

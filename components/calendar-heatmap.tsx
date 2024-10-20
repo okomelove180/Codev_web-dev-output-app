@@ -10,10 +10,9 @@ type CalendarData = {
 }
 
 export function CalendarHeatmap({ data = [] }: { data: CalendarData[] }) {
-  const [hoveredDate, setHoveredDate] = useState<string | null>(null)
+  const [, setHoveredDate] = useState<string | null>(null)
 
   const today = new Date()
-  const startDate = subDays(today, 364)
 
   const dateRange = Array.from({ length: 365 }, (_, i) => {
     const date = subDays(today, 364 - i)
