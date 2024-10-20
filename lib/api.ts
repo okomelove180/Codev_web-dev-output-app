@@ -1,7 +1,43 @@
 import { prisma } from "./prisma";
 import { differenceInDays } from "date-fns";
 
-export async function getUserProfile(userId: string) {
+interface Output {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  originalContent: string;
+  correctedContent: string;
+  analysis: string;
+  language: string;
+  userId: string;
+}
+
+interface LearningGoal {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  userId: string;
+  description: string;
+  completed: boolean;
+}
+
+interface UserProfile {
+  id: string;
+  name: string | null;
+  email: string;
+  createdAt: Date;
+  todayOutputs: number;
+  totalOutputs: number;
+  currentStreak: number;
+  recentOutputs: Output[];
+  learningGoals: LearningGoal[];
+  outputCalendar: Record<string, number>;
+  outputs: Output[];
+}
+
+export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -57,6 +93,7 @@ export async function getUserProfile(userId: string) {
       recentOutputs: user.outputs,
       learningGoals: user.learningGoals,
       outputCalendar,
+      outputs: user.outputs, // outputs プロパティを追加
     };
   } catch (error) {
     console.error("ユーザープロファイルの取得中にエラーが発生しました:", error);
