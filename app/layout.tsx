@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth/auth-options";
 import { Toaster } from "@/components/ui/toaster"
 
-
 export const metadata = {
   title: "Web Developer&apos;s Output App",
   description: "Record and analyze your web development learnings",
@@ -17,14 +16,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
   const session = await getServerSession(authOptions)
 
   return (
     <html lang="en">
       <body>
-        <Providers>
+        <Providers session={session}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {session && <Navigation />}
+            <Navigation serverSession={session ?? undefined} />
             <main className="flex-grow">{children}</main>
             <Toaster />
           </ThemeProvider>

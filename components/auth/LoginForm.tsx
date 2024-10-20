@@ -50,6 +50,7 @@ export default function LoginPage() {
         });
       } else {
         const session = await getSession();
+        console.log("Session:", session);
         if (session) {
           router.push("/home");
         } else {

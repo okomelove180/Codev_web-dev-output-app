@@ -3,10 +3,8 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import AudioRecorder from "@/components/AudioRecorder";
-import LanguageSelect from "@/components/LanguageSelect";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
+import NewOutputForm from "@/components/NewOutputForm";
 
 const NewOutputClient: React.FC = () => {
   const [processingStage, setProcessingStage] = useState<string | null>(null);
@@ -116,21 +114,12 @@ const NewOutputClient: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>新規アウトプット</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <LanguageSelect onLanguageChange={handleLanguageChange} />
-          <AudioRecorder
-            onRecordingComplete={handleRecordingComplete}
-            isDisabled={!selectedLanguage || !!processingStage}
-          />
-          {processingStage && <p>{processingStage}...</p>}
-        </CardContent>
-      </Card>
-    </div>
+    <NewOutputForm
+      selectedLanguage={selectedLanguage}
+      processingStage={processingStage}
+      onLanguageChange={handleLanguageChange}
+      onRecordingComplete={handleRecordingComplete}
+    />
   );
 };
 
