@@ -82,25 +82,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
             <Button variant="link">View All Outputs</Button>
           </CardFooter>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Skills</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* <SkillTags skills={user.skills} /> */}
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-3">
-          <CardHeader>
-            <CardTitle>Achievements</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* <AchievementBadges achievements={user.achievements} /> */}
-          </CardContent>
-        </Card>
-
+        
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle>Learning Goals</CardTitle>
