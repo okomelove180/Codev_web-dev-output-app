@@ -9,7 +9,7 @@ type CalendarData = {
   count: number
 }
 
-export function CalendarHeatmap({ data = [] }: { data?: CalendarData[] }) {
+export function CalendarHeatmap({ data = [] }: { data: CalendarData[] }) {
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
 
   const today = new Date()
