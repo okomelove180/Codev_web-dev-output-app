@@ -43,7 +43,7 @@ function UserDropdown({ session, handleSignOut }: { session: Session, handleSign
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
-          <Link href="/profile" className="w-full">
+          <Link href={`/users/${session.user.id}`} className="w-full">
             プロフィール
           </Link>
         </DropdownMenuItem>
