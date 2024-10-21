@@ -123,7 +123,7 @@ export function LearningGoals({ initialGoals, userId }: LearningGoalsProps) {
           value={newGoalTitle}
           onChange={(e) => setNewGoalTitle(e.target.value)}
         />
-        <Button onClick={addNewGoal}>追加</Button>
+        <Button onClick={addNewGoal} aria-label="新しい目標を追加">追加</Button>
       </div>
     </div>
   )

@@ -27,35 +27,36 @@ export default async function UserProfilePage({ params }: { params: { userId: st
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">ユーザープロフィール</h1>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {/* User Profile Card */}
         <Card className="col-span-full sm:col-span-2 md:col-span-3">
           <CardHeader>
             <div className="flex items-center space-x-4">
               <Avatar className="h-20 w-20">
-                <AvatarImage src="/avatar-placeholder.png" alt={user.name || ''} />
+                <AvatarImage src="/avatar-placeholder.png" alt="" />
                 <AvatarFallback>{user.name ? user.name[0].toUpperCase() : 'U'}</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle>{user.name}</CardTitle>
+                <CardTitle><h2>{user.name}</h2></CardTitle>
                 <CardDescription>{user.email}</CardDescription>
-                <p className="text-sm text-muted-foreground">Joined {user.createdAt.toLocaleDateString()}</p>
+                <p className="text-sm text-muted-foreground">登録日: {user.createdAt.toLocaleDateString()}</p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="text-center">
-                <h3 className="text-lg font-semibold">Today&apos;s Outputs</h3>
+                <h3 className="text-lg font-semibold">今日のアウトプット</h3>
                 <p className="text-3xl font-bold">{user.todayOutputs}</p>
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-semibold">Total Outputs</h3>
+                <h3 className="text-lg font-semibold">総アウトプット数</h3>
                 <p className="text-3xl font-bold">{user.totalOutputs}</p>
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-semibold">Current Streak</h3>
-                <p className="text-3xl font-bold">{user.currentStreak} days</p>
+                <h3 className="text-lg font-semibold">現在のストリーク</h3>
+                <p className="text-3xl font-bold">{user.currentStreak} 日</p>
               </div>
             </div>
           </CardContent>
@@ -64,18 +65,22 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         {/* Quick Actions Card */}
         <Card className="col-span-full sm:col-span-2 md:col-span-1">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle><h2>クイックアクション</h2></CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col space-y-2">
-            <Button>Create New Output</Button>
-            <Button variant="outline">View All Outputs</Button>
+            <Button>
+              <span aria-hidden="true">新規アウトプットを作成</span>
+            </Button>
+            <Button variant="outline">
+              <span aria-hidden="true">全てのアウトプットを表示</span>
+            </Button>
           </CardContent>
         </Card>
 
         {/* Output Calendar Card */}
         <Card className="col-span-full">
           <CardHeader>
-            <CardTitle>Output Calendar</CardTitle>
+            <CardTitle><h2>アウトプットカレンダー</h2></CardTitle>
           </CardHeader>
           <CardContent>
             <CalendarHeatmap data={calendarData} />
@@ -85,20 +90,22 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         {/* Recent Outputs Card */}
         <Card className="col-span-full md:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Outputs</CardTitle>
+            <CardTitle><h2>最近のアウトプット</h2></CardTitle>
           </CardHeader>
           <CardContent>
             <OutputList outputs={user.recentOutputs} />
           </CardContent>
           <CardFooter>
-            <Button variant="link">View All Outputs</Button>
+            <Button variant="link">
+              <span aria-hidden="true">全てのアウトプットを表示</span>
+            </Button>
           </CardFooter>
         </Card>
 
         {/* Skills Card */}
         <Card className="col-span-full sm:col-span-1">
           <CardHeader>
-            <CardTitle>Skills</CardTitle>
+            <CardTitle><h2>スキル</h2></CardTitle>
           </CardHeader>
           <CardContent>
             <SkillTags skills={skills} />
@@ -108,7 +115,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         {/* Learning Goals Card */}
         <Card className="col-span-full sm:col-span-2">
           <CardHeader>
-            <CardTitle>Learning Goals</CardTitle>
+            <CardTitle><h2>学習目標</h2></CardTitle>
           </CardHeader>
           <CardContent>
             <LearningGoals initialGoals={user.learningGoals} userId={user.id} />
@@ -118,7 +125,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         {/* Output Analytics Card */}
         <Card className="col-span-full">
           <CardHeader>
-            <CardTitle>Output Analytics</CardTitle>
+            <CardTitle><h2>アウトプット分析</h2></CardTitle>
           </CardHeader>
           <CardContent>
             <OutputAnalytics data={calendarData} />
