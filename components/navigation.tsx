@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSession, signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import { ThemeToggle } from "./theme-toggle";
 
 function NavigationSkeleton() {
   return (
@@ -43,7 +44,7 @@ function UserDropdown({ session, handleSignOut }: { session: Session, handleSign
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
-          <Link href="/profile" className="w-full">
+          <Link href={`/users/${session.user.id}`} className="w-full">
             プロフィール
           </Link>
         </DropdownMenuItem>
@@ -106,6 +107,7 @@ export default function Navigation({ serverSession }: { serverSession: Session |
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <ThemeToggle />
         <div className="flex items-center">
           {currentSession?.user?.name ? (
             <>
