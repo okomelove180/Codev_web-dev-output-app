@@ -116,7 +116,7 @@ export default async function UserProfilePage({ params }: { params: { userId: st
         </Card>
 
         {/* Learning Goals Card */}
-        <Card className="col-span-full sm:col-span-2">
+        <Card className="col-span-full sm:col-span-4">
           <CardHeader>
             <CardTitle><h2>学習目標</h2></CardTitle>
           </CardHeader>

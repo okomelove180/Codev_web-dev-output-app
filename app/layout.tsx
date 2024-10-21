@@ -5,11 +5,13 @@ import { Providers } from "@/components/providers"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth/auth-options";
 import { Toaster } from "@/components/ui/toaster"
+import { WebVitalsReporter } from "@/components/web-vitals-reporter"
 
 export const metadata = {
   title: "Web Developer&apos;s Output App",
   description: "Record and analyze your web development learnings",
 }
+
 
 export default async function RootLayout({
   children,
@@ -27,9 +29,11 @@ export default async function RootLayout({
             <Navigation serverSession={session ?? undefined} />
             <main className="flex-grow">{children}</main>
             <Toaster />
+            <WebVitalsReporter />
           </ThemeProvider>
         </Providers>
       </body>
     </html>
   )
 }
+
