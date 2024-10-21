@@ -7,6 +7,8 @@ interface OutputAnalyticsProps {
 }
 
 export function OutputAnalytics({ data }: OutputAnalyticsProps) {
+
+  
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>

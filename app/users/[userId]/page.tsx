@@ -8,7 +8,10 @@ import { CalendarHeatmap } from '@/components/calendar-heatmap';
 import { OutputList } from '@/components/output-list';
 import { SkillTags } from '@/components/skill-tags';
 import { LearningGoals } from '@/components/learning-goals';
-import { OutputAnalytics } from '@/components/output-analytics';
+import dynamic from 'next/dynamic';
+
+
+const OutputAnalytics = dynamic(() => import('@/components/output-analytics').then(mod => mod.OutputAnalytics),{loading: () => <p>Loading analytics...</p>});
 
 export default async function UserProfilePage({ params }: { params: { userId: string } }) {
   const user = await getUserProfile(params.userId);
