@@ -7,6 +7,7 @@ export const LOGO_SIZES = {
 
 export const LOGO_COLORS = {
   primary: 'stroke-primary fill-primary',
+  blue: 'stroke-logo-blue fill-logo-blue',
   white: 'stroke-white fill-white',
   black: 'stroke-black fill-black'
 } as const

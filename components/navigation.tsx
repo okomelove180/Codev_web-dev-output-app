@@ -82,10 +82,10 @@ export default function Navigation({ serverSession }: { serverSession: Session |
 
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-        <CodevLogo />
+      <div className="container mx-auto px-2 py-2 flex justify-between items-center">
         <NavigationMenu>
           <NavigationMenuList>
+            <CodevLogo />
             <NavigationMenuItem>
               <Link href="/outputs/new" passHref legacyBehavior>
                 <NavigationMenuLink active={pathname.startsWith("/outputs/new")}>

@@ -8,10 +8,14 @@ import { Toaster } from "@/components/ui/toaster"
 import { WebVitalsReporter } from "@/components/web-vitals-reporter"
 
 export const metadata = {
-  title: "Web Developer&apos;s Output App",
+  title: "Web Developer's Output App",
   description: "Record and analyze your web development learnings",
+  icons: {
+    icon: [
+      { url: '/branding/favicon.svg', type: 'image/svg+xml' }
+    ]
+  }
 }
-
 
 export default async function RootLayout({
   children,

@@ -7,7 +7,10 @@ export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Web Developer&apos;s Output App</h1>
+        <div className="flex justify-center items-center mb-4">
+          <img src="/branding/logo.png" alt="codev" className="h-16 mb-12"/>
+        </div>
+        <h1 className="text-4xl font-bold mb-4">駆け出しWeb開発者のためのアウトプットアプリ</h1>
         <p className="text-xl text-muted-foreground">記録し、分析し、成長する。あなたの学習をサポートします。</p>
       </header>
 
@@ -53,7 +56,7 @@ export default function HomePage() {
       </div>
 
       <footer className="mt-12 text-center text-muted-foreground">
-        <p>`&copy; 2024 Web Developer&apos;s Output App. All rights reserved.`</p>
+        <p>&copy; 2024 codev. All rights reserved.</p>
       </footer>
     </div>
   )
