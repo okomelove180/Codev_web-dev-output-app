@@ -19,6 +19,7 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { ThemeToggle } from "./theme-toggle";
+import { CodevLogo } from "@/components/logo";
 
 function NavigationSkeleton() {
   return (
@@ -82,15 +83,9 @@ export default function Navigation({ serverSession }: { serverSession: Session |
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+        <CodevLogo />
         <NavigationMenu>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/" passHref legacyBehavior>
-                <NavigationMenuLink active={pathname === "/"}>
-                  Home
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/outputs/new" passHref legacyBehavior>
                 <NavigationMenuLink active={pathname.startsWith("/outputs/new")}>
