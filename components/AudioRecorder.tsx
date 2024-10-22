@@ -48,7 +48,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       // MediaRecorderのオプション設定
       const options = {
         mimeType: mimeType,
-        audioBitsPerSecond: 128000
+        audioBitsPerSecond: 16000
       };
 
       console.log('Using MIME type:', mimeType); // デバッグ用
