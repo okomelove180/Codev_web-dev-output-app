@@ -14,13 +14,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transcription = await transcribeAudio(audioFile);
+    // デバッグ情報の追加
+    console.log('Received audio file:', {
+      type: audioFile.type,
+      size: audioFile.size
+    });
 
+    // ファイルの内容を確認
+    const arrayBuffer = await audioFile.arrayBuffer();
+    console.log('File content length:', arrayBuffer.byteLength);
+
+    const transcription = await transcribeAudio(audioFile);
     return NextResponse.json({ text: transcription, language: language });
   } catch (error) {
     console.error("Error in transcribe API:", error);
     return NextResponse.json(
-      { error: "Internal server error", details: (error as Error).message },
+      { 
+        error: "Failed to transcribe output",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
   }

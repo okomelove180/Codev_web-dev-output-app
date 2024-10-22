@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 interface AudioRecorderProps {
   onRecordingComplete: (blob: Blob) => void;
@@ -28,21 +29,49 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   const startRecording = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+
+      // iOSかどうかを確認
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      // 対応フォーマットの確認とMediaRecorderの設定
+      let mimeType = 'audio/webm';
+      if (isIOS) {
+        if (MediaRecorder.isTypeSupported('audio/mp4')) {
+          mimeType = 'audio/mp4';
+        } else if (MediaRecorder.isTypeSupported('audio/m4a')) {
+          mimeType = 'audio/m4a';
+        } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+          mimeType = 'audio/wav';
+        }
+      }
+
+      // MediaRecorderのオプション設定
+      const options = {
+        mimeType: mimeType,
+        audioBitsPerSecond: 128000
+      };
+
+      console.log('Using MIME type:', mimeType); // デバッグ用
+
+      mediaRecorderRef.current = new MediaRecorder(stream, options);
 
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
+          console.log('Recorded chunk type:', event.data.type); // デバッグ用
           chunksRef.current.push(event.data);
         }
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/wav" });
+        const blob = new Blob(chunksRef.current, { type: mimeType });
+        console.log('Final blob type:', blob.type); // デバッグ用
+        console.log('Final blob size:', blob.size); // デバッグ用
         onRecordingComplete(blob);
         chunksRef.current = [];
       };
 
-      mediaRecorderRef.current.start();
+      // 1秒ごとにデータを取得するように設定
+      mediaRecorderRef.current.start(1000);
       setRecordingTime(0);
       timerRef.current = setInterval(() => {
         setRecordingTime((prevTime) => {
@@ -55,6 +84,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       }, 1000);
     } catch (error) {
       console.error("Error starting recording:", error);
+      toast({
+        title: "録音エラー",
+        description: "録音の開始に失敗しました。デバイスの設定を確認してください。",
+        variant: "destructive",
+      });
     }
   }, [onRecordingComplete]);
 
