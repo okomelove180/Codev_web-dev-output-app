@@ -40,6 +40,13 @@ export async function POST(request: NextRequest) {
       throw new Error("Transcription result is empty");
     }
 
+    // ファイル名とContent-Typeの整合性チェック
+    const fileExtension = audioFile.name.split('.').pop()?.toLowerCase();
+    const expectedExtension = audioFile.type.split('/')[1];
+    if (fileExtension !== expectedExtension) {
+      console.warn(`File extension (${fileExtension}) doesn't match content type (${expectedExtension})`);
+    }
+
     return NextResponse.json({ text: transcription, language: language });
   } catch (error) {
     console.error("Error in transcribe API:", error);

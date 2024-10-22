@@ -33,15 +33,18 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       // iOSかどうかを確認
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-      // 対応フォーマットの確認とMediaRecorderの設定
-      let mimeType = 'audio/webm';
+      // 適切なMIMEタイプとファイル拡張子の組み合わせを設定
+      let mimeType = 'audio/mp4';
+      let fileExtension = '.mp4';
+
+      // iOSの場合の特別な処理
       if (isIOS) {
         if (MediaRecorder.isTypeSupported('audio/mp4')) {
           mimeType = 'audio/mp4';
-        } else if (MediaRecorder.isTypeSupported('audio/m4a')) {
-          mimeType = 'audio/m4a';
-        } else if (MediaRecorder.isTypeSupported('audio/wav')) {
-          mimeType = 'audio/wav';
+          fileExtension = '.mp4';
+        } else if (MediaRecorder.isTypeSupported('audio/mpeg')) {
+          mimeType = 'audio/mpeg';
+          fileExtension = '.mp3';
         }
       }
 
@@ -51,22 +54,33 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         audioBitsPerSecond: 16000
       };
 
-      console.log('Using MIME type:', mimeType); // デバッグ用
+      console.log(`Using format: ${mimeType} with extension ${fileExtension}`); // デバッグ用
 
       mediaRecorderRef.current = new MediaRecorder(stream, options);
 
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          console.log('Recorded chunk type:', event.data.type); // デバッグ用
           chunksRef.current.push(event.data);
         }
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: mimeType });
-        console.log('Final blob type:', blob.type); // デバッグ用
-        console.log('Final blob size:', blob.size); // デバッグ用
-        onRecordingComplete(blob);
+        const finalMimeType = mediaRecorderRef.current?.mimeType || mimeType;
+        const blob = new Blob(chunksRef.current, { type: finalMimeType });
+
+        // Blobを新しいFileオブジェクトとして作成（拡張子を合わせる）
+        const file = new File([blob], `recording${fileExtension}`, {
+          type: finalMimeType,
+          lastModified: Date.now()
+        });
+
+        console.log('Recording completed:', {
+          name: file.name,
+          type: file.type,
+          size: file.size
+        });
+
+        onRecordingComplete(file);
         chunksRef.current = [];
       };
 
@@ -91,7 +105,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       });
     }
   }, [onRecordingComplete]);
-
+  
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stop();
