@@ -7,7 +7,7 @@ interface NewOutputFormProps {
   selectedLanguage: string;
   processingStage: string | null;
   onLanguageChange: (language: string) => void;
-  onRecordingComplete: (audioBlob: Blob) => Promise<void>;
+  onRecordingComplete: (audioFile: File) => Promise<void>;
 }
 
 const NewOutputForm: React.FC<NewOutputFormProps> = ({

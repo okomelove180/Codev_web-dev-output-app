@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
 interface AudioRecorderProps {
-  onRecordingComplete: (blob: Blob) => void;
+  onRecordingComplete: (file: File) => void;
   isDisabled: boolean,
 }
 
@@ -105,7 +105,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       });
     }
   }, [onRecordingComplete]);
-  
+
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stop();

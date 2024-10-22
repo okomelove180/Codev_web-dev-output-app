@@ -12,7 +12,7 @@ const NewOutputClient: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const handleRecordingComplete = async (audioBlob: Blob) => {
+  const handleRecordingComplete = async (audioFile: File) => {
     if (!session?.user?.id) {
       toast({
         title: "認証エラー",
@@ -34,7 +34,13 @@ const NewOutputClient: React.FC = () => {
 
     try {
       const formData = new FormData();
-      formData.append("audio", audioBlob, "recording.webm");
+      formData.append("audio", audioFile);
+
+      console.log("Sending audio file:", {
+        name: audioFile.name,
+        type: audioFile.type,
+        size: audioFile.size
+      });
 
       // 音声認識
       setProcessingStage("音声認識中");
