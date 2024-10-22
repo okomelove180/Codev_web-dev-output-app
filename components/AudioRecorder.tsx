@@ -37,7 +37,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const blob = new Blob(chunksRef.current, { type: "audio/wav" });
         onRecordingComplete(blob);
         chunksRef.current = [];
       };
