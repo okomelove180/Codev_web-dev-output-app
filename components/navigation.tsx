@@ -20,7 +20,11 @@ import { useSession, signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { ThemeToggle } from "./theme-toggle";
 import { CodevLogo } from "@/components/logo";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+// ナビゲーションのスケルトンコンポーネント（変更なし）
 function NavigationSkeleton() {
   return (
     <header className="border-b">
@@ -32,24 +36,30 @@ function NavigationSkeleton() {
   );
 }
 
-function UserDropdown({ session, handleSignOut }: { session: Session, handleSignOut: () => void }) {
+// ユーザードロップダウンコンポーネント
+function UserDropdown({ session, handleSignOut }: { session: Session; handleSignOut: () => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger className="focus:outline-none">
         <Avatar>
-          <AvatarImage src="/avatar.png" alt={session?.user?.name || "User"} />
+          <AvatarImage src="/avatar.png" alt={session?.user?.name || "ユーザー"} />
           <AvatarFallback>
             {session?.user?.name ? session.user.name[0].toUpperCase() : "U"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild onSelect={() => setIsOpen(false)}>
           <Link href={`/users/${session.user.id}`} className="w-full">
             プロフィール
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem onSelect={() => {
+          setIsOpen(false);
+          handleSignOut();
+        }}>
           ログアウト
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -57,17 +67,19 @@ function UserDropdown({ session, handleSignOut }: { session: Session, handleSign
   );
 }
 
+// メインのナビゲーションコンポーネント
 export default function Navigation({ serverSession }: { serverSession: Session | undefined }) {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [mounted, setMounted] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    console.log("Session status changed:", status, "Session:", session || serverSession);
+    console.log("セッションステータスが変更されました:", status, "セッション:", session || serverSession);
   }, [status, session, serverSession]);
 
   if (!mounted) {
@@ -80,33 +92,40 @@ export default function Navigation({ serverSession }: { serverSession: Session |
 
   const currentSession = session || serverSession;
 
+  // ナビゲーションメニュー項目
+  const navItems = [
+    { href: "/outputs/new", label: "新規アウトプット", requireAuth: true },
+    { href: "/outputs", label: "アウトプット一覧", requireAuth: true }
+  ];
+
   return (
     <header className="border-b">
       <div className="container mx-auto px-2 py-2 flex justify-between items-center">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <CodevLogo />
-            <NavigationMenuItem>
-              <Link href="/outputs/new" passHref legacyBehavior>
-                <NavigationMenuLink active={pathname.startsWith("/outputs/new")}>
-                  New Output
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/outputs" passHref legacyBehavior>
-                <NavigationMenuLink active={pathname.startsWith("/outputs")}>
-                  Outputs
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <ThemeToggle />
         <div className="flex items-center">
+          <CodevLogo />
+          {/* デスクトップ用ナビゲーション */}
+          <NavigationMenu className="hidden md:flex ml-4">
+            <NavigationMenuList>
+              {navItems.map((item) => (
+                (currentSession) && (
+                  <NavigationMenuItem key={item.href}>
+                    <Link href={item.href} passHref legacyBehavior>
+                      <NavigationMenuLink active={pathname.startsWith(item.href)}>
+                        {item.label}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                )
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <ThemeToggle />
           {currentSession?.user?.name ? (
             <>
-              <span className="mr-2 text-sm font-medium hidden sm:inline-block">
+              <span className="mr-2 text-sm font-medium hidden lg:inline-block">
                 {currentSession.user.name} さんがログイン中
               </span>
               <UserDropdown session={currentSession} handleSignOut={handleSignOut} />
@@ -115,6 +134,34 @@ export default function Navigation({ serverSession }: { serverSession: Session |
             <Link href="/login" className="text-sm font-medium">
               ログイン
             </Link>
+          )}
+
+          {/* モバイル用メニュー */}
+          {currentSession && (
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="md:hidden">
+                <Menu className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">メニュー</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <nav className="flex flex-col space-y-4">
+                {navItems.map((item) => (
+                  (!item.requireAuth || currentSession) && (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`text-lg ${pathname.startsWith(item.href) ? "font-bold" : ""}`}
+                      onClick={() => setIsSheetOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
           )}
         </div>
       </div>

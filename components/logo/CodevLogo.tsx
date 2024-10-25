@@ -7,7 +7,7 @@ export default function CodevLogo({ className }: { className?: string }) {
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 200 60" 
-        className="w-32 h-8"
+        className="w-24 h-8"
       >
         <g className="stroke-logo-blue"> {/* 絵の部分は常に青色 */}
           <path 
