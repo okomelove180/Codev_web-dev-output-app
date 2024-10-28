@@ -78,10 +78,6 @@ export default function Navigation({ serverSession }: { serverSession: Session |
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    console.log("セッションステータスが変更されました:", status, "セッション:", session || serverSession);
-  }, [status, session, serverSession]);
-
   if (!mounted) {
     return <NavigationSkeleton />;
   }
