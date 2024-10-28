@@ -14,7 +14,6 @@ export default async function OutputsPage() {
 
 
   const outputs = await getOutputs(session.user.id);
-  console.log(outputs)
   
   return <OutputListReview outputs={outputs} />;
 }

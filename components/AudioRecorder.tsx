@@ -17,6 +17,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);  // 追加: タイマー表示の制御
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -54,7 +55,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         audioBitsPerSecond: 16000
       };
 
-      console.log(`Using format: ${mimeType} with extension ${fileExtension}`); // デバッグ用
+      console.log(`Using format: ${mimeType} with extension ${fileExtension}`);
 
       mediaRecorderRef.current = new MediaRecorder(stream, options);
 
@@ -68,7 +69,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         const finalMimeType = mediaRecorderRef.current?.mimeType || mimeType;
         const blob = new Blob(chunksRef.current, { type: finalMimeType });
 
-        // Blobを新しいFileオブジェクトとして作成（拡張子を合わせる）
         const file = new File([blob], `recording${fileExtension}`, {
           type: finalMimeType,
           lastModified: Date.now()
@@ -84,9 +84,10 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
         chunksRef.current = [];
       };
 
-      // 1秒ごとにデータを取得するように設定
       mediaRecorderRef.current.start(1000);
       setRecordingTime(0);
+      setShowTimer(true);  // 追加: 録音開始時にタイマーを表示
+
       timerRef.current = setInterval(() => {
         setRecordingTime((prevTime) => {
           if (prevTime >= MAX_RECORDING_TIME - 1) {
@@ -115,8 +116,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     }
     if (timerRef.current) {
       clearInterval(timerRef.current);
+      timerRef.current = null;
     }
     setRecordingTime(0);
+    setShowTimer(false);  // 追加: 録音停止時にタイマーを非表示
+    setIsRecording(false);  // 修正: 録音状態も明示的にfalseに設定
   }, []);
 
   useEffect(() => {
@@ -125,6 +129,13 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
     } else {
       stopRecording();
     }
+
+    // クリーンアップ関数
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [isRecording, startRecording, stopRecording]);
 
   return (
@@ -137,7 +148,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
       >
         {isRecording ? "録音停止" : "録音開始"}
       </Button>
-      {isRecording && (
+      {showTimer && (  // 修正: isRecording を showTimer に変更
         <div className="mt-2 text-center">
           録音時間: {recordingTime}秒 / {MAX_RECORDING_TIME}秒
         </div>
