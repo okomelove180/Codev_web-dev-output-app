@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import { differenceInDays, isSameDay, subDays, startOfDay, parseISO } from "date-fns";
+import { isSameDay, subDays, startOfDay } from "date-fns";
 import { LearningGoal } from '@prisma/client'
 
 interface Output {
