@@ -70,7 +70,7 @@ function UserDropdown({ session, handleSignOut }: { session: Session; handleSign
 // メインのナビゲーションコンポーネント
 export default function Navigation({ serverSession }: { serverSession: Session | undefined }) {
   const pathname = usePathname();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
