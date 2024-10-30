@@ -7,10 +7,12 @@ const languages = [
   "HTML",
   "CSS",
   "Ruby",
-  "Rails",
+  "Ruby on Rails",
   "JavaScript",
   "TypeScript",
   "Next.js",
+  "Java",
+  "Python"
 ];
 
 interface LanguageSelectProps {
