@@ -23,6 +23,16 @@ const PERIOD_OPTIONS: PeriodOption[] = [
   { value: "180", label: "180日", days: 180 },
 ];
 
+interface ChartData {
+  date: string;
+  count: number;
+  formattedDate: string;
+}
+
+interface PeriodData {
+  [key: string]: ChartData[];
+}
+
 export function OutputAnalytics({ data }: OutputAnalyticsProps) {
   // データを日付でソート
   const sortedData = useMemo(() => 
@@ -47,10 +57,10 @@ export function OutputAnalytics({ data }: OutputAnalyticsProps) {
     PERIOD_OPTIONS.reduce((acc, period) => ({
       ...acc,
       [period.value]: getFilteredData(period.days)
-    }), {}), [sortedData]
+    }), {} as PeriodData), [sortedData]
   );
 
-  const LineChartComponent = ({ data }: { data: any[] }) => (
+  const LineChartComponent = ({ data }: { data: ChartData[] }) => (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart
         data={data}
