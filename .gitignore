@@ -36,3 +36,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+#repopack
+.repopack-output.txt
