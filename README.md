@@ -91,7 +91,7 @@ NextAuth.js
 - ESLint/Prettier（コード品質管理）
 
 ## 📊 データベース設計
-```marmaid
+```mermaid
 erDiagram
 
   "User" ||--o{ "Output" : ""
