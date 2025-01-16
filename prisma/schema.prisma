@@ -8,9 +8,8 @@ generator erd {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider  = "mysql"
+  url = env("DATABASE_URL")
 }
 
 model User {
@@ -27,9 +26,9 @@ model User {
 model Output {
   id               String        @id @default(cuid())
   title            String
-  originalContent  String
-  correctedContent String
-  analysis         String
+  originalContent  String        @db.Text
+  correctedContent String        @db.Text
+  analysis         String        @db.Text
   language         String
   userId           String
   createdAt        DateTime      @default(now())
@@ -40,9 +39,9 @@ model Output {
 
 model RelatedLink {
   id          String  @id @default(cuid())
-  siteName    String
-  url         String
-  summary     String
+  siteName    String  @db.Text
+  url         String  @db.Text
+  summary     String  @db.Text
   likes_count Int?
   isOfficial  Boolean
   outputId    String
@@ -52,7 +51,7 @@ model RelatedLink {
 model LearningGoal {
   id          String   @id @default(cuid())
   title       String
-  description String
+  description String   @db.Text
   completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

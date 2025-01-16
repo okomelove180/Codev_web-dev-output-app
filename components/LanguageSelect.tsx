@@ -12,7 +12,8 @@ const languages = [
   "TypeScript",
   "Next.js",
   "Java",
-  "Python"
+  "Python",
+  "AWS"
 ];
 
 interface LanguageSelectProps {

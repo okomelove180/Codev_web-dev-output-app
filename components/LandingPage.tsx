@@ -62,10 +62,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         <header className="text-center mb-12 sm:mb-16">
-          <div className="flex justify-center items-center mb-4">
-            <img src="/branding/logo.png" alt="codev" className="h-12 sm:h-16 mb-8 sm:mb-12"/>
-          </div>
-          <h1 className="text-3xl sm:text-3xl lg:text-5xl font-bold mb-4">Web Developer&apos;s Output App</h1>
+          <h1 className="text-3xl sm:text-3xl lg:text-3xl font-bold mb-4">Web Developer&apos;s Output App</h1>
           <p className="text-lg sm:text-xl text-muted-foreground mb-6 sm:mb-8">あなたの学びをアウトプットしよう。</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button asChild size="lg" className="w-full sm:w-auto">

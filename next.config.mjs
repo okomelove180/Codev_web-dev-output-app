@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP'],
-  },
+  }
 };
 
 export default nextConfig;

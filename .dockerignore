@@ -1,0 +1,20 @@
+# Node.js関連のファイルを無視
+node_modules
+
+# ローカルのビルド成果物やNext.jsのキャッシュ
+.next
+
+# 環境設定ファイル（任意で指定）
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Git関連のファイル
+.git
+.gitignore
+
+# Docker関連のファイル
+Dockerfile
+docker-compose.yml
