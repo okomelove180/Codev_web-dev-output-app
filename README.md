@@ -40,8 +40,8 @@ https://www.meti.go.jp/shingikai/mono_info_service/digital_jinzai/pdf/002_02_02.
 
 
 ## 🔑 主な機能
-1. **音声アウトプット機能**
-   - 最大60秒の音声録音
+1. **音声入力によるアウトプット機能**
+   - 最大60秒の音声を認識
    - Whisper*3による高精度な文字起こし
    - GPT-4-miniによる文字起こし修正
    
