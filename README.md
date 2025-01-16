@@ -66,26 +66,20 @@ https://www.meti.go.jp/shingikai/mono_info_service/digital_jinzai/pdf/002_02_02.
 ## 🛠 使用技術
 
 ### フロントエンド
-Next.js 14.2.14 /
-React/
-TypeScript /
-TailwindCSS /
-shadcnui
+- Next.js
 
 ### バックエンド
-Next.js API Routes /
-Prisma /
-PostgreSQL/ 
-NextAuth.js
+- Next.js API Routes
+- Prisma
+- NextAuth.js
+
+### インフラ
+- AWS (ECS Fargate)
 
 ### AI/API
 - OpenAI GPT-4-mini
 - OpenAI Whisper API
 - Qiita API
-
-### インフラ/開発環境
-- Vercel
-- AWS (ECS Fargate)
 
 ## 📊 データベース設計
 ```mermaid
