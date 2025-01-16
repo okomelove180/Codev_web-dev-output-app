@@ -70,14 +70,14 @@ https://www.meti.go.jp/shingikai/mono_info_service/digital_jinzai/pdf/002_02_02.
 
 ### フロントエンド
 Next.js 14.2.14 /
-React 18.x /
-TypeScript 5.6.2 /
-TailwindCSS 3.4.1 /
+React/
+TypeScript /
+TailwindCSS /
 shadcnui
 
 ### バックエンド
 Next.js API Routes /
-Prisma 5.20.0 /
+Prisma /
 PostgreSQL/ 
 NextAuth.js
 
