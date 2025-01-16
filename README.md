@@ -87,8 +87,8 @@ NextAuth.js
 - Qiita API
 
 ### インフラ/開発環境
-- Vercel（ホスティング）
-- ESLint/Prettier（コード品質管理）
+- Vercel
+- AWS (ECS Fargate)
 
 ## 📊 データベース設計
 ```mermaid
@@ -149,54 +149,9 @@ erDiagram
 
 ### 2. 各APIからの出力調整
 - **分析結果の安定性**: GPT4-miniからの出力をjson形式に指定することで、出力の安定性を向上。
-- **リンク切れ対策**: 独自の検索アルゴリズムでQiita記事のリンク切れを防止。
-
-### 3. パフォーマンス最適化
-- **クライアントとサーバーコンポーネントの適切な使い分け**
-  ```typescript
-  // クライアントコンポーネント例（インタラクティブな要素用）
-  // components/AudioRecorder.tsx
-  "use client"
-  export default function AudioRecorder({ onRecordingComplete }: Props) {
-    // ...
-  }
-
-  // サーバーコンポーネント例（静的な表示用）
-  // components/OutputDetailPreview.tsx
-  export default function OutputDetailPreview({ output }: Props) {
-    // ...
-  }
-  ```
-
-- **コンポーネントの遅延ローディング**
-  ```typescript
-  // app/users/[userId]/page.tsx
-  const OutputAnalytics = dynamic(
-    () => import('@/components/output-analytics'),
-    { loading: () => <p>Loading analytics...</p> }
-  );
-  ```
-
-### 4. 保守性・拡張性
-- **型安全性**: TypeScriptによる静的型チェック
-- **コンポーネント設計**: 再利用可能なUI部品の抽出/既成のuiコンポーネントをフル活用
-
-
+- **リンク切れ対策**: 独自の検索アルゴリズムでQiita記事のリンク切れを防止
 
 ## 🔄 今後の展望
 
 **勉強のために下記実施予定**
-- 自動テストコードの記述
-- Docker, CI/CDによる開発体験の向上
-- AWS ECSにデプロイ
-
-## 👨‍💻 開発期間
-- 開発期間：2024年9月中旬〜2024年10月下旬（約1.5ヶ月）
-- 開発体制：個人開発
-
-## 🎯 学んだこと
-- Next.js 14のApp Routerの使用方法
-- OpenAIのWhisper APIとGPT4 APIの使用方法
-- Prismaを使用したデータベース設計とマイグレーション管理
-- shadcn/uiを活用したモダンなUI実装
-- Vercelへのデプロイとインフラ管理
+- CI/CDによる開発体験の向上
