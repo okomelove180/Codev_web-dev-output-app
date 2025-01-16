@@ -137,6 +137,8 @@ erDiagram
     DateTime updatedAt 
     }
 ```
+## AWS構成図
+![codevwithdocker drawio](https://github.com/user-attachments/assets/8cdbefe5-a7fd-4b2f-a116-d96e0ab4910d)
 
 ## ✨ 工夫したポイント
 
@@ -152,4 +154,5 @@ erDiagram
 ## 🔄 今後の展望
 
 **勉強のために下記実施予定**
+- テストコードの実装
 - CI/CDによる開発体験の向上
